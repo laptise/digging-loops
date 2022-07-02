@@ -2,6 +2,8 @@ import { FC, ReactNode } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Common.module.scss";
+import { Button } from "@mui/material";
+import Link from "next/link";
 
 type LayoutProps = {
   children: ReactNode;
@@ -28,7 +30,18 @@ export const Layout: FC<LayoutProps> = ({ children, pageTitle, mainId }) => {
   );
 };
 
-const Header = () => <header className={styles.header}>Digging Loops</header>;
+const Header = () => {
+  return (
+    <header className={styles.header}>
+      <Link passHref={true} href="/">
+        Digging Loops
+      </Link>
+      <Link passHref={true} href="/login">
+        <Button>LOGIN</Button>
+      </Link>
+    </header>
+  );
+};
 
 const Footer = () => (
   <footer className={styles.footer}>
