@@ -1,10 +1,12 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Common.module.scss";
-import { Button } from "@mui/material";
+import { Button, Dialog, DialogTitle, ModalProps, Stack } from "@mui/material";
 import Link from "next/link";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
 type LayoutProps = {
   children: ReactNode;
   pageTitle: string;
@@ -29,17 +31,45 @@ export const Layout: FC<LayoutProps> = ({ children, pageTitle, mainId }) => {
     </>
   );
 };
+export interface SimpleDialogProps {
+  open: boolean;
+  close(): void;
+}
+
+const SimpleDialog: FC<SimpleDialogProps> = ({ open, close }) => {
+  const handleClose: ModalProps["onClose"] = (_, reason) => {
+    close();
+  };
+
+  const handleListItemClick = (value: string) => {};
+
+  return (
+    <Dialog onClose={handleClose} open={open}>
+      <DialogTitle>Set backup account</DialogTitle>
+    </Dialog>
+  );
+};
 
 const Header = () => {
+  const [viewSearchBox, setViewSearchBox] = useState(false);
+  const searchBoxClose = () => setViewSearchBox(false);
   return (
-    <header className={styles.header}>
-      <Link passHref={true} href="/">
-        Digging Loops
-      </Link>
-      <Link passHref={true} href="/login">
-        <Button>LOGIN</Button>
-      </Link>
-    </header>
+    <>
+      <header className={styles.header}>
+        <Link passHref={true} href="/">
+          Digging Loops
+        </Link>
+        <Stack direction="row">
+          <Button onClick={() => setViewSearchBox(true)}>
+            <FontAwesomeIcon fontSize={20} icon={faMagnifyingGlass} />
+          </Button>
+          <Link passHref={true} href="/login">
+            <Button>LOGIN</Button>
+          </Link>
+        </Stack>
+      </header>
+      <SimpleDialog open={viewSearchBox} close={searchBoxClose} />
+    </>
   );
 };
 
