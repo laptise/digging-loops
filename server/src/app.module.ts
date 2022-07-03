@@ -10,6 +10,7 @@ import { camelCase } from 'typeorm/util/StringUtils';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { Track } from './track/track';
+import { S3Module } from './s3/s3.module';
 const namingStrategy = new (class
   extends DefaultNamingStrategy
   implements NamingStrategyInterface
@@ -41,6 +42,7 @@ const namingStrategy = new (class
       synchronize: true,
     }),
     TrackModule,
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
