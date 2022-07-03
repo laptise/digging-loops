@@ -26,7 +26,7 @@ services:
     ports:
       - 13306:3306
     expose:
-      - 3306 #不要かも？
+      - 13306
     volumes:
       - ./mysql/initdb.d:/docker-entrypoint-initdb.d #DB駆動エントリポイント
       - ./mysql/db:/var/lib/mysql #ここにデータ永続化するためのファイルが入る。
@@ -74,6 +74,6 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
     - PMA_ARBITRARY=1
-    - PMA_HOSTS=db
+    - PMA_HOSTS=dl_db:13306
     ports:
     - 18888:80
