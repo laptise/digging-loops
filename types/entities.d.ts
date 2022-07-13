@@ -6,3 +6,10 @@ export type Track = {
   playedCount: number;
   purchasedCount: number;
 };
+
+export type User = {
+  email: string;
+  password: string;
+  displayName: string;
+  isAdmin: number;
+};
