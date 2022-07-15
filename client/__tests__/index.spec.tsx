@@ -1,9 +1,10 @@
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import { render, screen } from "@testing-library/react";
 import Home from "../pages";
 
-test("ログインボタンの存在", async () => {
+describe("描画処理", () => {
   render(<Home />);
-
-  expect(screen.getByText("LOGIN")).toBeTruthy();
+  test("ログインボタンの存在", async () => {
+    expect(screen.getByText("LOGIN")).toBeTruthy();
+  });
 });
