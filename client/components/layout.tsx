@@ -1,9 +1,9 @@
 import { FC, ReactNode, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Common.module.scss";
 import { Button, Dialog, DialogTitle, ModalProps, Stack } from "@mui/material";
 import Link from "next/link";
+import styles from "../styles/Common.module.scss";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
