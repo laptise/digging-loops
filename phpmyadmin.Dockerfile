@@ -1,0 +1,2 @@
+FROM phpmyadmin/phpmyadmin
+USER phpmyadmin

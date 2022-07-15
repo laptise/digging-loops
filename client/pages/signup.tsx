@@ -3,6 +3,9 @@ import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 
 const SignUp = () => {
+  const submit = () => {
+    console.log(1188);
+  };
   return (
     <Layout mainId="layout" pageTitle="회원가입">
       <Paper id={styles.paper}>
@@ -12,7 +15,9 @@ const SignUp = () => {
         <TextField id="email" type={"email"} label="이메일 주소" variant="standard" />
         <TextField id="password" type={"password"} label="암호" variant="standard" />
         <TextField id="passwordConfirm" type={"password"} label="암호확인" variant="standard" />
-        <Button variant="contained">회원가입</Button>
+        <Button onClick={submit} variant="contained">
+          회원가입
+        </Button>
       </Paper>
     </Layout>
   );
