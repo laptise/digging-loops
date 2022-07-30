@@ -12,6 +12,7 @@ import { join } from 'path';
 import { Track } from './track/track';
 import { S3Module } from './s3/s3.module';
 import { UserModule } from './user/user.module';
+import { User } from './user/user';
 const namingStrategy = new (class
   extends DefaultNamingStrategy
   implements NamingStrategyInterface
@@ -38,7 +39,7 @@ const namingStrategy = new (class
       username: 'root',
       password: process.env.ROOT_PASSWORD,
       database: 'digging_loops',
-      entities: [Track],
+      entities: [Track, User],
       namingStrategy,
       synchronize: true,
     }),

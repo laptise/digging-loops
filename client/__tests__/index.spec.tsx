@@ -4,7 +4,8 @@ import Home from "../pages";
 
 describe("描画処理", () => {
   render(<Home />);
+  const loginButton = screen.getByText("LOGIN");
   test("ログインボタンの存在", async () => {
-    expect(screen.getByText("LOGIN")).toBeTruthy();
+    expect(loginButton).toBeTruthy();
   });
 });
