@@ -14,6 +14,9 @@ import { S3Module } from './s3/s3.module';
 import { UserModule } from './user/user.module';
 import { User } from './user/user';
 import { SampleModule } from './sample/sample.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 const namingStrategy = new (class
   extends DefaultNamingStrategy
   implements NamingStrategyInterface
@@ -48,6 +51,7 @@ const namingStrategy = new (class
     S3Module,
     UserModule,
     SampleModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

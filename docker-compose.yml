@@ -47,7 +47,7 @@ services:
      - ./server:/usr/src/app
      - ./types:/usr/src/types #共通型定義ファイル
     ports:
-      - "13018:3018"
+      - "13018:3000"
     depends_on:
       - dl_db
 
@@ -74,6 +74,6 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
     - PMA_ARBITRARY=1
-    - PMA_HOSTS=dl_db:13306
+    - PMA_HOSTS=dl_db
     ports:
     - 18888:80
