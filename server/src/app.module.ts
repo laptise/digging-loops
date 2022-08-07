@@ -13,6 +13,7 @@ import { Track } from './track/track';
 import { S3Module } from './s3/s3.module';
 import { UserModule } from './user/user.module';
 import { User } from './user/user';
+import { SampleModule } from './sample/sample.module';
 const namingStrategy = new (class
   extends DefaultNamingStrategy
   implements NamingStrategyInterface
@@ -46,6 +47,7 @@ const namingStrategy = new (class
     TrackModule,
     S3Module,
     UserModule,
+    SampleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

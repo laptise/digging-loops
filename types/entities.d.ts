@@ -13,3 +13,12 @@ export type User = {
   displayName: string;
   isAdmin: number;
 };
+
+export type Sample = {
+  id: number;
+  name: string;
+  url: string;
+  isDisabled: boolean;
+  playedCount: number;
+  purchasedCount: number;
+};
