@@ -10,8 +10,8 @@ export type Track = {
 export type User = {
   email: string;
   password: string;
-  displayName: string;
-  isAdmin: number;
+  name: string;
+  rank: number;
 };
 
 export type Sample = {

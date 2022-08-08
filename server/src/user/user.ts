@@ -10,14 +10,11 @@ export class User extends BaseEntity implements Type {
   email: string;
   @Field(() => String)
   @Column('varchar')
-  name: string;
-  @Field(() => String)
-  @Column('varchar')
   password: string;
   @Field(() => String)
   @Column('varchar')
-  displayName: string;
+  name: string;
   @Field(() => Boolean)
   @Column({ type: 'int', default: 0 })
-  isAdmin: number;
+  rank: number;
 }
