@@ -5,6 +5,7 @@ import { serverSideAxios } from "../axios/server";
 import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 import crypto from "crypto";
+import { setCookie } from "nookies";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +20,12 @@ const Login = () => {
   }, [email, password]);
   const submit = async () => {
     const hashPass = crypto.createHash("sha256").update(password, "utf8").digest("hex");
-    serverSideAxios.post("auth/login", { email, password: hashPass });
+    const { data } = await serverSideAxios.post("auth/login", { email, password: hashPass });
+    setCookie(null, "access_token", data.access_token, {
+      maxAge: 24 * 60 * 60,
+      path: "/",
+    });
+    sessionStorage.setItem("access_token", data.access_token);
   };
   return (
     <Layout mainId="layout" pageTitle="로그인">
