@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { serverSideAxios } from "../axios/server";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,9 @@ const SignUp = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const submit = () => {
+  const submit = async () => {
+    const res = await serverSideAxios.get("auth/login");
+    console.log(res);
     console.log(1188);
   };
   return (
