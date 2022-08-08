@@ -14,8 +14,8 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
   const submit = async () => {
-    const res = await serverSideAxios.get("auth/login");
-    console.log(res);
+    const res = await serverSideAxios.post("auth/login", { hell: 11 });
+    console.log(res.data);
     console.log(1188);
   };
   return (
