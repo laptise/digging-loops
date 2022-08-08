@@ -6,11 +6,13 @@ import {
   Req,
   UseGuards,
   Request as NestRequest,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/user/user';
+import { CurrentUser } from './guards/local-auth.guard';
 type PasswordOmitUser = Omit<User, 'password'>;
 @Controller('auth')
 export class AuthController {
@@ -36,5 +38,11 @@ export class AuthController {
     // LocalStrategy.validate()で認証して返した値がreq.userに入ってる
     // JwtToken を返す
     return { ...user, ...token };
+  }
+
+  @UseGuards(AuthGuard('jwt')) //
+  @Get('test')
+  async authCheck(@CurrentUser() user: User) {
+    console.log(user);
   }
 }
