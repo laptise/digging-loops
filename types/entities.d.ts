@@ -9,7 +9,7 @@ export type Track = {
 
 export type User = {
   email: string;
-  password: string;
+  password?: string;
   name: string;
   rank: number;
 };
