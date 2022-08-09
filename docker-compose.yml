@@ -50,6 +50,8 @@ services:
       - "13018:3000"
     depends_on:
       - dl_db
+    expose:
+      - 13018
 
   # Next.jsクライアント・サーバー
   dl_client:

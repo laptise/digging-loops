@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { serverSideAxios } from "../axios/server";
+import { clientAxios } from "../axios/server";
 import crypto from "crypto";
 import { AxiosError } from "axios";
 import { ErrorHandler } from "../errors/handler";
@@ -29,10 +29,9 @@ const SignUp = () => {
     setIsSafe(validCheck);
   }, [email, name, password, passwordConfirm]);
   const submit = async () => {
-    console.log(crypto);
     const hashPass = crypto.createHash("sha256").update(password, "utf8").digest("hex");
     try {
-      const res = await serverSideAxios.post("auth/signup", { email, name, password: hashPass });
+      const res = await clientAxios.post("auth/signup", { email, name, password: hashPass });
     } catch (err) {
       if (err instanceof AxiosError) {
         const message = ErrorHandler.parse(err);

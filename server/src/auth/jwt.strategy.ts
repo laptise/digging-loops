@@ -26,7 +26,6 @@ export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
   //   req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
   //   options?: any,
   // ): void {
-  //   console.log('fasfa');
   // }
 
   // ここでPayloadを使ったバリデーション処理を実行できる

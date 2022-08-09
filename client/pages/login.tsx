@@ -1,7 +1,7 @@
 import { Button, Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { serverSideAxios } from "../axios/server";
+import { clientAxios } from "../axios/server";
 import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 import crypto from "crypto";
@@ -20,7 +20,7 @@ const Login = () => {
   }, [email, password]);
   const submit = async () => {
     const hashPass = crypto.createHash("sha256").update(password, "utf8").digest("hex");
-    const { data } = await serverSideAxios.post("auth/login", { email, password: hashPass });
+    const { data } = await clientAxios.post("auth/login", { email, password: hashPass });
     setCookie(null, "access_token", data.access_token, {
       maxAge: 24 * 60 * 60,
       path: "/",

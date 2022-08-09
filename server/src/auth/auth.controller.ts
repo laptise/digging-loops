@@ -41,8 +41,8 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('jwt')) //
-  @Get('test')
+  @Get('check')
   async authCheck(@CurrentUser() user: User) {
-    console.log(user);
+    return user;
   }
 }
