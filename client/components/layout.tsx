@@ -1,7 +1,26 @@
 import { User } from "@entities";
 import { faBars, faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Button, Dialog, DialogTitle, ModalProps, Stack } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  Dialog,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  InputLabel,
+  ModalProps,
+  Radio,
+  RadioGroup,
+  Select,
+  SelectChangeEvent,
+  Slider,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -43,6 +62,52 @@ export interface SimpleDialogProps {
   close(): void;
 }
 
+function BasicSelect() {
+  const [age, setAge] = useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAge(event.target.value as string);
+  };
+
+  return (
+    <Box sx={{ minWidth: 120 }}>
+      <FormControl fullWidth>
+        <Select id="demo-simple-select" value={age} onChange={handleChange}>
+          <MenuItem value={10}>4/4</MenuItem>
+          <MenuItem value={20}>3/4</MenuItem>
+          <MenuItem value={30}>2/4</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+  );
+}
+
+function valuetext(value: number) {
+  return `${value}°C`;
+}
+
+function RangeSlider() {
+  const [value, setValue] = useState<number[]>([80, 120]);
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
+
+  return (
+    <Box sx={{ width: 200 }}>
+      <Slider
+        min={40}
+        max={200}
+        getAriaLabel={() => "Temperature range"}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        getAriaValueText={valuetext}
+      />
+    </Box>
+  );
+}
+
 const SimpleDialog: FC<SimpleDialogProps> = ({ open, close }) => {
   const handleClose: ModalProps["onClose"] = (_, reason) => {
     close();
@@ -52,14 +117,69 @@ const SimpleDialog: FC<SimpleDialogProps> = ({ open, close }) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Set backup account</DialogTitle>
+      <DialogTitle>검색</DialogTitle>
+      <Stack sx={{ p: 2 }} spacing={2}>
+        <Stack direction="row" spacing={2}>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">검색대상</FormLabel>
+            <ButtonGroup orientation="vertical" variant="outlined" aria-label="outlined button group">
+              <Button>샘플</Button>
+              <Button variant="contained">루프</Button>
+              <Button>음원</Button>
+            </ButtonGroup>
+          </FormControl>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">분위기</FormLabel>
+            <ButtonGroup variant="outlined" aria-label="outlined button group">
+              <Button>상쾌</Button>
+              <Button variant="contained">신남</Button>
+              <Button>깜찍</Button>
+              <Button variant="contained">행복</Button>
+            </ButtonGroup>
+            <ButtonGroup variant="outlined" aria-label="outlined button group">
+              <Button>공포</Button>
+              <Button>역동</Button>
+              <Button>장엄</Button>
+              <Button>분노</Button>
+            </ButtonGroup>
+            <ButtonGroup variant="outlined" aria-label="outlined button group">
+              <Button>슬픔</Button>
+              <Button>몽환</Button>
+              <Button>심플</Button>
+              <Button>복잡</Button>
+            </ButtonGroup>
+          </FormControl>
+        </Stack>
+        <Stack direction="row" spacing={2}>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">BPM</FormLabel>
+            <RangeSlider />
+          </FormControl>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">마디수</FormLabel>
+            <RangeSlider />
+          </FormControl>
+        </Stack>
+        <FormControl>
+          <FormLabel id="demo-row-radio-buttons-group-label">박자</FormLabel>
+          <BasicSelect />
+        </FormControl>
+        <FormControl>
+          <FormLabel id="demo-row-radio-buttons-group-label">가격</FormLabel>
+          <RangeSlider />
+        </FormControl>
+        <Stack direction="row" alignItems={"center"} spacing={2}>
+          <Typography>검색어</Typography>
+          <TextField placeholder="입력" />
+        </Stack>
+      </Stack>
     </Dialog>
   );
 };
 
 const LoginButton = () => (
   <Link passHref={true} href="/login">
-    <Button>LOGIN</Button>
+    <Button sx={{ color: "white" }}>LOGIN</Button>
   </Link>
 );
 
@@ -109,6 +229,10 @@ const AppBarr: FC<{ auth?: User | null }> = ({ auth }) => {
     setAnchorEl(null);
   };
 
+  const logout = async () => {
+    console.log(1199);
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }} className={styles.header}>
@@ -153,7 +277,7 @@ const AppBarr: FC<{ auth?: User | null }> = ({ auth }) => {
                 >
                   {auth.name}님<MenuItem onClick={handleClose}>내 프로필</MenuItem>
                   <MenuItem onClick={handleClose}>대시보드</MenuItem>
-                  <MenuItem>로그아웃</MenuItem>
+                  <MenuItem onClick={logout}>로그아웃</MenuItem>
                 </Menu>
               </>
             ) : (
