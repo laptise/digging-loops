@@ -6,11 +6,16 @@ import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 import crypto from "crypto";
 import { setCookie } from "nookies";
+import { checkAuthSSR } from "../ssr/auth";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSafe, setIsSafe] = useState(false);
+  const router = useRouter();
+
   useEffect(() => {
     const validateIsSafe = () => {
       if (!email || !password) return false;
@@ -26,6 +31,7 @@ const Login = () => {
       path: "/",
     });
     sessionStorage.setItem("access_token", data.access_token);
+    router.reload();
   };
   return (
     <Layout mainId="layout" pageTitle="로그인">
@@ -48,3 +54,11 @@ const Login = () => {
 };
 
 export default Login;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const user = await checkAuthSSR(req);
+  console.log(user);
+  if (user) {
+    return { redirect: { destination: "/", permanent: true }, props: {} };
+  } else return { props: {}, redirect: null };
+};

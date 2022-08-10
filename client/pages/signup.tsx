@@ -7,6 +7,9 @@ import { clientAxios } from "../axios/server";
 import crypto from "crypto";
 import { AxiosError } from "axios";
 import { ErrorHandler } from "../errors/handler";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { checkAuthSSR } from "../ssr/auth";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");

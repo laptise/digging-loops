@@ -1,13 +1,18 @@
-import { FC, ReactNode, useState } from "react";
+import { User } from "@entities";
+import { faBars, faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Avatar, Button, Dialog, DialogTitle, ModalProps, Stack } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Toolbar from "@mui/material/Toolbar";
 import Head from "next/head";
 import Image from "next/image";
-import { Button, Dialog, DialogTitle, ModalProps, Stack } from "@mui/material";
 import Link from "next/link";
+import { FC, ReactNode, useState } from "react";
 import styles from "../styles/Common.module.scss";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
-import { User } from "@entities";
 type LayoutProps = {
   children: ReactNode;
   pageTitle: string;
@@ -18,7 +23,7 @@ type LayoutProps = {
 export const Layout: FC<LayoutProps> = ({ children, pageTitle, mainId, auth }) => {
   return (
     <>
-      <Header auth={auth} />
+      <AppBarr auth={auth} />
       <div className={styles.container}>
         <Head>
           <title>{`${pageTitle} | Digging Loops`}</title>
@@ -63,22 +68,11 @@ const UserButton: FC<{ auth: User }> = ({ auth }) => {
 };
 
 const Header: FC<{ auth?: User | null }> = ({ auth }) => {
-  const [viewSearchBox, setViewSearchBox] = useState(false);
-  const searchBoxClose = () => setViewSearchBox(false);
   return (
     <>
       <header className={styles.header}>
-        <Link passHref={true} href="/">
-          Digging Loops
-        </Link>
-        <Stack direction="row">
-          <Button onClick={() => setViewSearchBox(true)}>
-            <FontAwesomeIcon fontSize={20} icon={faMagnifyingGlass} />
-          </Button>
-          {auth ? <UserButton auth={auth} /> : <LoginButton />}
-        </Stack>
+        <Stack direction="row">{auth ? <UserButton auth={auth} /> : <LoginButton />}</Stack>
       </header>
-      <SimpleDialog open={viewSearchBox} close={searchBoxClose} />
     </>
   );
 };
@@ -97,3 +91,78 @@ const Footer = () => (
     </a>
   </footer>
 );
+
+const AppBarr: FC<{ auth?: User | null }> = ({ auth }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [viewSearchBox, setViewSearchBox] = useState(false);
+  const searchBoxClose = () => setViewSearchBox(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // setAuth(event.target.checked);
+  };
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <Box sx={{ flexGrow: 1 }} className={styles.header}>
+        <AppBar position="static">
+          <Toolbar sx={{ display: "flex" }}>
+            <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+              <FontAwesomeIcon icon={faBars} />
+            </IconButton>
+            <Link passHref={true} href="/">
+              Digging Loops
+            </Link>
+            <Button onClick={() => setViewSearchBox(true)}>
+              <FontAwesomeIcon fontSize={20} icon={faMagnifyingGlass} color="white" />
+            </Button>
+            {auth ? (
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  sx={{ marginLeft: "auto" }}
+                  color="inherit"
+                >
+                  <Avatar />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  {auth.name}님<MenuItem onClick={handleClose}>내 프로필</MenuItem>
+                  <MenuItem onClick={handleClose}>대시보드</MenuItem>
+                  <MenuItem>로그아웃</MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <LoginButton />
+            )}
+          </Toolbar>
+        </AppBar>
+      </Box>
+      <SimpleDialog open={viewSearchBox} close={searchBoxClose} />
+    </>
+  );
+};
