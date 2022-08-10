@@ -1,5 +1,5 @@
 import { User } from "@entities";
-import { faBars, faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
+import { faBars, faMagnifyingGlass, faStar } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Avatar,
@@ -14,6 +14,7 @@ import {
   ModalProps,
   Radio,
   RadioGroup,
+  Rating,
   Select,
   SelectChangeEvent,
   Slider,
@@ -72,7 +73,7 @@ function BasicSelect() {
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
-        <Select id="demo-simple-select" value={age} onChange={handleChange}>
+        <Select id="demo-simple-select" value={age} onChange={handleChange} size="small">
           <MenuItem value={10}>4/4</MenuItem>
           <MenuItem value={20}>3/4</MenuItem>
           <MenuItem value={30}>2/4</MenuItem>
@@ -108,6 +109,51 @@ function RangeSlider() {
   );
 }
 
+const labels: { [index: string]: string } = {
+  0.5: "0.5점이상",
+  1: "1점이상",
+  1.5: "1.5점이상",
+  2: "2점이상",
+  2.5: "2.5점이상",
+  3: "3점이상",
+  3.5: "3.5점이상",
+  4: "4점이상",
+  4.5: "4.5점이상",
+  5: "5점만",
+};
+
+function getLabelText(value: number) {
+  return `${value} Star${value !== 1 ? "s" : ""}, ${labels[value]}`;
+}
+
+function HoverRating() {
+  const [value, setValue] = useState<number | null>(2);
+  const [hover, setHover] = useState(-1);
+
+  return (
+    <Box
+      sx={{
+        width: 300,
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <Rating
+        name="hover-feedback"
+        value={value}
+        precision={0.5}
+        getLabelText={getLabelText}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        onChangeActive={(event, newHover) => {
+          setHover(newHover);
+        }}
+      />
+      {value !== null && <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>}
+    </Box>
+  );
+}
 const SimpleDialog: FC<SimpleDialogProps> = ({ open, close }) => {
   const handleClose: ModalProps["onClose"] = (_, reason) => {
     close();
@@ -149,6 +195,27 @@ const SimpleDialog: FC<SimpleDialogProps> = ({ open, close }) => {
               <Button>복잡</Button>
             </ButtonGroup>
           </FormControl>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">악기</FormLabel>
+            <ButtonGroup variant="outlined" aria-label="outlined button group">
+              <Button>기타</Button>
+              <Button variant="contained">베이스</Button>
+              <Button>드럼</Button>
+              <Button variant="contained">보컬</Button>
+            </ButtonGroup>
+            <ButtonGroup variant="outlined" aria-label="outlined button group">
+              <Button>브라스</Button>
+              <Button>스트링</Button>
+              <Button>플럭</Button>
+              <Button>트</Button>
+            </ButtonGroup>
+            <ButtonGroup variant="outlined" aria-label="outlined button group">
+              <Button>Sine</Button>
+              <Button>Saw</Button>
+              <Button>Sq</Button>
+              <Button>LFO</Button>
+            </ButtonGroup>
+          </FormControl>
         </Stack>
         <Stack direction="row" spacing={2}>
           <FormControl>
@@ -159,15 +226,21 @@ const SimpleDialog: FC<SimpleDialogProps> = ({ open, close }) => {
             <FormLabel id="demo-row-radio-buttons-group-label">마디수</FormLabel>
             <RangeSlider />
           </FormControl>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">박자</FormLabel>
+            <BasicSelect />
+          </FormControl>
         </Stack>
-        <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">박자</FormLabel>
-          <BasicSelect />
-        </FormControl>
-        <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">가격</FormLabel>
-          <RangeSlider />
-        </FormControl>
+        <Stack direction="row" spacing={2}>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">가격</FormLabel>
+            <RangeSlider />
+          </FormControl>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">별점</FormLabel>
+            <HoverRating />
+          </FormControl>
+        </Stack>
         <Stack direction="row" alignItems={"center"} spacing={2}>
           <Typography>검색어</Typography>
           <TextField placeholder="입력" />
