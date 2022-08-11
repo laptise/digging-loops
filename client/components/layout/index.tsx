@@ -1,10 +1,17 @@
 import { User } from "@entities";
-import { faAlbumCollection, faBars, faChevronLeft, faCloudArrowUp, faIdCard, faMagnifyingGlass, faRightLeft } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faAlbumCollection,
+  faBars,
+  faChevronLeft,
+  faCloudArrowUp,
+  faIdCard,
+  faMagnifyingGlass,
+  faRightFromBracket,
+} from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Avatar,
   Button,
-  Dialog,
   Divider,
   Drawer,
   ListItemAvatar,
@@ -19,8 +26,6 @@ import {
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Head from "next/head";
 import Image from "next/image";
@@ -99,18 +104,22 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
           />
         </ListItemButton>
         <Divider />
-        <ListItemButton component="a" href="#customized-list">
-          <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
-            <FontAwesomeIcon icon={faIdCard} size="lg" style={{ margin: "auto" }} />
-          </ListItemIcon>
-          <Typography style={{ fontWeight: "medium", fontSize: 18 }}>내 프로필</Typography>
-        </ListItemButton>
-        <ListItemButton component="a" href="#customized-list">
-          <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
-            <FontAwesomeIcon icon={faAlbumCollection} size="lg" style={{ margin: "auto" }} />
-          </ListItemIcon>
-          <Typography style={{ fontWeight: "medium", fontSize: 18 }}>내 라이브러리</Typography>
-        </ListItemButton>
+        <Link passHref={true} href="/profile">
+          <ListItemButton component="a" href="#customized-list">
+            <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
+              <FontAwesomeIcon icon={faIdCard} size="lg" style={{ margin: "auto" }} />
+            </ListItemIcon>
+            <Typography style={{ fontWeight: "medium", fontSize: 18 }}>내 프로필</Typography>
+          </ListItemButton>
+        </Link>
+        <Link passHref={true} href="/library">
+          <ListItemButton component="a">
+            <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
+              <FontAwesomeIcon icon={faAlbumCollection} size="lg" style={{ margin: "auto" }} />
+            </ListItemIcon>
+            <Typography style={{ fontWeight: "medium", fontSize: 18 }}>내 라이브러리</Typography>
+          </ListItemButton>
+        </Link>
         <Link passHref={true} href="/upload">
           <ListItemButton component="a">
             <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
@@ -119,6 +128,13 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
             <Typography style={{ fontWeight: "medium", fontSize: 18 }}>업로드</Typography>
           </ListItemButton>
         </Link>
+        <Divider />
+        <ListItemButton component="a">
+          <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
+            <FontAwesomeIcon icon={faRightFromBracket} size="lg" style={{ margin: "auto" }} />
+          </ListItemIcon>
+          <Typography style={{ fontWeight: "medium", fontSize: 18 }}>로그아웃</Typography>
+        </ListItemButton>
       </Stack>
     </Drawer>
   );
