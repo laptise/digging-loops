@@ -22,3 +22,40 @@ export type Sample = {
   playedCount: number;
   purchasedCount: number;
 };
+
+export type TrackTagMap = {
+  trackId: number;
+  tagId: number;
+};
+
+export type Tag = {
+  id: number;
+  name: string;
+};
+
+export type TrackFeelingMap = {
+  trackId: number;
+  feelingId: number;
+};
+
+export type FeelingMst = {
+  id: number;
+  name: string;
+};
+
+export type TrackSoundMap = {
+  trackId: number;
+  soundId: number;
+};
+
+export type SoundMst = {
+  id: number;
+  name: string;
+};
+
+export type Dictionary = {
+  id: number;
+  kor: string;
+  eng: string;
+  jpn: string;
+};

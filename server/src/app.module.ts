@@ -1,22 +1,28 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
 import { DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm';
+import { camelCase } from 'typeorm/util/StringUtils';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TrackModule } from './track/track.module';
-import { camelCase } from 'typeorm/util/StringUtils';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
-import { Track } from './track/track';
-import { S3Module } from './s3/s3.module';
-import { UserModule } from './user/user.module';
-import { User } from './user/user';
-import { SampleModule } from './sample/sample.module';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { Dictionary } from './dictionary/dictionary';
+import { DictionaryModule } from './dictionary/dictionary.module';
+import { S3Module } from './s3/s3.module';
+import { SampleModule } from './sample/sample.module';
+import { Track } from './track/track';
+import { TrackModule } from './track/track.module';
+import { User } from './user/user';
+import { UserModule } from './user/user.module';
+import { FeelingMstModule } from './feeling-mst/feeling-mst.module';
+import { FeelingMst } from './feeling-mst/feeling-mst';
+import { SoundMst } from './sound-mst/sound-mst';
+import { TrackFeelingMap } from './track-feeling-map/track-feeling-map';
+import { TrackSoundMap } from './track-sound-map/track-sound-map';
+import { TrackTagMap } from './track-tag-map/track-tag-map';
 const namingStrategy = new (class
   extends DefaultNamingStrategy
   implements NamingStrategyInterface
@@ -43,7 +49,16 @@ const namingStrategy = new (class
       username: 'root',
       password: process.env.ROOT_PASSWORD,
       database: 'digging_loops',
-      entities: [Track, User],
+      entities: [
+        Track,
+        User,
+        Dictionary,
+        FeelingMst,
+        SoundMst,
+        TrackFeelingMap,
+        TrackSoundMap,
+        TrackTagMap,
+      ],
       namingStrategy,
       synchronize: true,
     }),
@@ -52,6 +67,8 @@ const namingStrategy = new (class
     UserModule,
     SampleModule,
     AuthModule,
+    DictionaryModule,
+    FeelingMstModule,
   ],
   controllers: [AppController],
   providers: [AppService],
