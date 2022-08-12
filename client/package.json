@@ -6,6 +6,7 @@
     "dev": "npx next dev",
     "build": "npx next build",
     "start": "npx next start",
+    "serve": "npx next build && npx next start",
     "lint": "npx next lint",
     "test": "jest"
   },
