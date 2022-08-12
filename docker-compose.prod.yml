@@ -15,7 +15,7 @@ services:
 
   dl_db:
     container_name: dl_db
-    platform: linux/amd64
+    platform: linux/x86_64
     image: mysql:8
     restart: always
     environment:
@@ -42,7 +42,7 @@ services:
       dockerfile: server.Dockerfile
     environment:
       TZ: Asia/Tokyo
-    command: 'pnpm install && nest start'
+    command: 'nest start'
     volumes:
      - ./server:/usr/src/app
      - ./types:/usr/src/types #共通型定義ファイル
