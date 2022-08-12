@@ -10,6 +10,7 @@ import { ErrorHandler } from "../errors/handler";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { checkAuthSSR } from "../ssr/auth";
+import { ErrorDialog } from "../components/dialogs/alert-dialog";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -17,12 +18,14 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isSafe, setIsSafe] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
+  const router = useRouter();
   useEffect(() => {
     const validCheck = () => {
       if (!email || !name || !password || !passwordConfirm) return false;
@@ -35,6 +38,7 @@ const SignUp = () => {
     const hashPass = crypto.createHash("sha256").update(password, "utf8").digest("hex");
     try {
       const res = await clientAxios.post("auth/signup", { email, name, password: hashPass });
+      setHasError(true);
     } catch (err) {
       if (err instanceof AxiosError) {
         const message = ErrorHandler.parse(err);
@@ -44,6 +48,14 @@ const SignUp = () => {
   };
   return (
     <Layout mainId="layout" pageTitle="회원가입">
+      <ErrorDialog
+        open={hasError}
+        onClose={() => {
+          setHasError(false);
+          router.push("/login");
+        }}
+        msg={"회원가입이 완료되었습니다.\n로그인해주세요"}
+      />
       <Paper id={styles.paper}>
         <Typography variant="h4" color={"primary"}>
           회원가입

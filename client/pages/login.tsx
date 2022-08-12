@@ -9,12 +9,14 @@ import { setCookie } from "nookies";
 import { checkAuthSSR } from "../ssr/auth";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { ErrorDialog } from "../components/dialogs/alert-dialog";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSafe, setIsSafe] = useState(false);
   const router = useRouter();
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const validateIsSafe = () => {
@@ -24,17 +26,28 @@ const Login = () => {
     setIsSafe(validateIsSafe);
   }, [email, password]);
   const submit = async () => {
-    const hashPass = crypto.createHash("sha256").update(password, "utf8").digest("hex");
-    const { data } = await clientAxios.post("auth/login", { email, password: hashPass });
-    setCookie(null, "access_token", data.access_token, {
-      maxAge: 24 * 60 * 60,
-      path: "/",
-    });
-    sessionStorage.setItem("access_token", data.access_token);
-    router.reload();
+    try {
+      const hashPass = crypto.createHash("sha256").update(password, "utf8").digest("hex");
+      const { data } = await clientAxios.post("auth/login", { email, password: hashPass });
+      setCookie(null, "access_token", data.access_token, {
+        maxAge: 24 * 60 * 60,
+        path: "/",
+      });
+      sessionStorage.setItem("access_token", data.access_token);
+      router.reload();
+    } catch {
+      setHasError(true);
+    }
   };
   return (
     <Layout mainId="layout" pageTitle="로그인">
+      <ErrorDialog
+        open={hasError}
+        onClose={() => {
+          setHasError(false);
+        }}
+        msg={"일치하는 로그인정보가 없습니다."}
+      />
       <Paper id={styles.paper}>
         <Typography variant="h4" color={"primary"}>
           로그인

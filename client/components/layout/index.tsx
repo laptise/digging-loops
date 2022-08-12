@@ -33,6 +33,8 @@ import Link from "next/link";
 import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
 import styles from "../../styles/Common.module.scss";
 import SearchPanel from "./search-panel";
+import { destroyCookie } from "nookies";
+import { useRouter } from "next/router";
 type LayoutProps = {
   children: ReactNode;
   pageTitle: string;
@@ -74,7 +76,12 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
   auth,
 }) => {
   const [drawerOpen, setDrawerOpen] = drawerOpenState;
-
+  const router = useRouter();
+  const logout = async () => {
+    sessionStorage.removeItem("access_token");
+    destroyCookie(null, "access_token");
+    router.reload();
+  };
   return (
     <Drawer
       open={drawerOpen}
@@ -129,7 +136,7 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
           </ListItemButton>
         </Link>
         <Divider />
-        <ListItemButton component="a">
+        <ListItemButton component="a" onClick={logout}>
           <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
             <FontAwesomeIcon icon={faRightFromBracket} size="lg" style={{ margin: "auto" }} />
           </ListItemIcon>
