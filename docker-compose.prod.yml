@@ -42,7 +42,7 @@ services:
       dockerfile: server.Dockerfile
     environment:
       TZ: Asia/Tokyo
-    command: 'nest start'
+    command: 'pnpm serve'
     volumes:
      - ./server:/usr/src/app
      - ./types:/usr/src/types #共通型定義ファイル
