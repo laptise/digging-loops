@@ -64,7 +64,7 @@ services:
     volumes:
       - ./client:/usr/src/app
       - ./types:/usr/src/types #共通型定義ファイル
-    command: 'pnpm build && pnpm start'
+    command: 'npx next build && npx next start'
     ports:
       - "13000:3000"
     depends_on:
