@@ -15,7 +15,7 @@ services:
 
   dl_db:
     container_name: dl_db
-    platform: linux/x86_64x
+    platform: linux/x86_64
     image: mysql:8
     restart: always
     environment:
