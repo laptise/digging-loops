@@ -151,16 +151,6 @@ const SearchPanel = () => {
             <TempoSelect />
           </FormControl>
         </Stack>
-        <Stack direction="row" spacing={2}>
-          <FormControl>
-            <FormLabel id="demo-row-radio-buttons-group-label">가격</FormLabel>
-            <RangeSlider />
-          </FormControl>
-          <FormControl>
-            <FormLabel id="demo-row-radio-buttons-group-label">별점</FormLabel>
-            <HoverRating />
-          </FormControl>
-        </Stack>
         <Stack direction="row" alignItems={"center"} spacing={2}>
           <Typography>검색어</Typography>
           <TextField placeholder="입력" />
@@ -214,8 +204,6 @@ function SortSelect() {
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
         <Select id="demo-simple-select" value={age} onChange={handleChange} size="small">
-          <MenuItem value={"24"}>가격순</MenuItem>
-          <MenuItem value={"34"}>별점순</MenuItem>
           <MenuItem value={"44"}>판매순</MenuItem>
           <MenuItem value={"48"}>다운로드순</MenuItem>
           <MenuItem value={"68"}>매치순</MenuItem>
