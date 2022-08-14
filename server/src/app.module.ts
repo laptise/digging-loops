@@ -4,33 +4,22 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm';
-import { camelCase } from 'typeorm/util/StringUtils';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { Dictionary } from './dictionary/dictionary';
 import { DictionaryModule } from './dictionary/dictionary.module';
-import { S3Module } from './s3/s3.module';
-import { SampleModule } from './sample/sample.module';
-import { Track } from './track/track';
-import { TrackModule } from './track/track.module';
-import { User } from './user/user';
-import { UserModule } from './user/user.module';
-import { FeelingMstModule } from './feeling-mst/feeling-mst.module';
 import { FeelingMst } from './feeling-mst/feeling-mst';
+import { FeelingMstModule } from './feeling-mst/feeling-mst.module';
+import { S3Module } from './s3/s3.module';
 import { SoundMst } from './sound-mst/sound-mst';
 import { TrackFeelingMap } from './track-feeling-map/track-feeling-map';
 import { TrackSoundMap } from './track-sound-map/track-sound-map';
 import { TrackTagMap } from './track-tag-map/track-tag-map';
-const namingStrategy = new (class
-  extends DefaultNamingStrategy
-  implements NamingStrategyInterface
-{
-  tableName(targetName: string, userSpecifiedName: string): string {
-    return userSpecifiedName || camelCase(targetName);
-  }
-})();
+import { Track } from './track/track';
+import { TrackModule } from './track/track.module';
+import { User } from './user/user';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -59,13 +48,11 @@ const namingStrategy = new (class
         TrackSoundMap,
         TrackTagMap,
       ],
-      namingStrategy,
       synchronize: true,
     }),
     TrackModule,
     S3Module,
     UserModule,
-    SampleModule,
     AuthModule,
     DictionaryModule,
     FeelingMstModule,
