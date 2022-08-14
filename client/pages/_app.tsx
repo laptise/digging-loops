@@ -1,6 +1,7 @@
 import { deepPurple } from "@mui/material/colors";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import type { AppProps } from "next/app";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../styles/globals.scss";
 
 const theme = createTheme({
