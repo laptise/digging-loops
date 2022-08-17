@@ -6,6 +6,11 @@ export const clientAxios = Axios.create({
   headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest", authorization: `Bearer ${getCsrToken()}` },
 });
 
+export const noHeaderAxios = Axios.create({
+  baseURL: `http://${process.env.NEXT_PUBLIC_DOMAIN_NAME}:13018`,
+  headers: { "X-Requested-With": "XMLHttpRequest", authorization: `Bearer ${getCsrToken()}` },
+});
+
 export const ssrAxios = Axios.create({
   baseURL: "http://dl_server:3000",
   headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest", authorization: `Bearer ${getCsrToken()}` },
