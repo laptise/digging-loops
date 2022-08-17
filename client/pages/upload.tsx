@@ -1,7 +1,7 @@
 import { User } from "@entities";
 import { Button, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, Stack, TextField, Typography } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { clientAxios } from "../axios/server";
 import { Layout } from "../components/layout";
 import { withAuth } from "../ssr/auth";
@@ -21,8 +21,12 @@ function RowRadioButtonsGroup() {
 
 const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const upload = async () => {
-    clientAxios.post("track/upload", { a: 2 });
+  const [file, setFile] = useState<File | null>(null);
+  const upload = async (file: File) => {
+    const form = new FormData();
+    form.append("a", file);
+    console.log(file);
+    await clientAxios.post("track/upload", form);
   };
 
   return (
@@ -32,7 +36,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
           ref={formRef}
           onSubmit={(e) => {
             e.preventDefault();
-            upload();
+            // upload();
           }}
         >
           <Stack sx={{ p: 2 }} spacing={2}>
@@ -48,7 +52,10 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
             </FormControl>
             <input
               onChange={(e) => {
-                console.log(e.target.files);
+                const file = e.target?.files?.[0];
+                if (file) {
+                  upload(file);
+                }
               }}
               name="file"
               type="file"
