@@ -1,12 +1,9 @@
 import { User } from "@entities";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import type { GetServerSideProps, NextPage } from "next";
-import { useEffect } from "react";
-import { clientAxios, ssrAxios } from "../axios/server";
-import { Layout } from "../components/layout";
+import { useState } from "react";
+import { TopLayout } from "../components/top/top-layout";
 import { withAuth } from "../ssr/auth";
-import styles from "../styles/Index.module.scss";
-
 const TopPreset = () => {
   return (
     <Box>
@@ -14,6 +11,33 @@ const TopPreset = () => {
     </Box>
   );
 };
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `main-tab-${index}`,
+    "aria-controls": `main-tabpanel-${index}`,
+  };
+}
 
 const TopSamples = () => {
   return (
@@ -24,16 +48,14 @@ const TopSamples = () => {
 };
 
 const Home: NextPage<{ auth: User | null }> = ({ auth }) => {
+  const [value, setValue] = useState(0);
   return (
-    <Layout pageTitle="홈" mainId="22" auth={auth}>
-      <Paper id={styles.paper}>
-        Digging Loops
-        <Stack direction="row" spacing={2}>
-          <TopSamples />
-          <TopPreset />
-        </Stack>
-      </Paper>
-    </Layout>
+    <TopLayout auth={auth} value={0}>
+      <Stack direction="row" spacing={2}>
+        <TopSamples />
+        <TopPreset />
+      </Stack>
+    </TopLayout>
   );
 };
 
