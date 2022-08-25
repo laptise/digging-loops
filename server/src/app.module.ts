@@ -20,6 +20,7 @@ import { Track } from './track/track';
 import { TrackModule } from './track/track.module';
 import { User } from './user/user';
 import { UserModule } from './user/user.module';
+import { FileMapModule } from './file-map/file-map.module';
 
 @Module({
   imports: [
@@ -34,10 +35,11 @@ import { UserModule } from './user/user.module';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'dl_db',
-      username: 'root',
-      password: process.env.ROOT_PASSWORD,
-      database: 'digging_loops',
+      host: process.env.DB_HOST,
+      username: process.env.DB_USER_NAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_SCHEMA,
+      port: Number(process.env.DB_PORT),
       entities: [
         Track,
         User,
@@ -48,7 +50,7 @@ import { UserModule } from './user/user.module';
         TrackSoundMap,
         TrackTagMap,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     TrackModule,
     S3Module,
@@ -56,6 +58,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     DictionaryModule,
     FeelingMstModule,
+    FileMapModule,
   ],
   controllers: [AppController],
   providers: [AppService],

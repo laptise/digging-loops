@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as aws from 'aws-sdk';
 import Axios from 'axios';
-
+import * as jschardet from 'jschardet';
 @Injectable()
 export class S3Service {
   s3 = new aws.S3({
@@ -12,6 +12,7 @@ export class S3Service {
   });
 
   async upload(file: Express.Multer.File) {
+    console.log(jschardet.detect(file.originalname));
     const uploadParams = {
       Bucket: 'digging-loops',
       // Add the required 'Key' parameter using the 'path' module.

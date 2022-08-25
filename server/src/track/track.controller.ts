@@ -22,9 +22,9 @@ export class TrackController {
   async upload(
     @CurrentUser() user: User,
     @UploadedFile() file: Express.Multer.File,
+    @Body() body: object,
   ) {
-    console.log(user);
-    console.log(file);
+    console.log(body);
     await this.s3Service.upload(file);
     file.originalname;
     // const url = await this.s3Service.upload(filePath, type);

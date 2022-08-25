@@ -7,6 +7,14 @@ export type Track = {
   purchasedCount: number;
 };
 
+export type FileMap = {
+  id: number;
+  fileType: number;
+  ownerId: number;
+  createdAt: number;
+  updatedAt: number;
+};
+
 export type User = {
   email: string;
   password?: string;

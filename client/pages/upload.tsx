@@ -26,7 +26,8 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
     if (file) {
       const form = new FormData();
       form.append("track", file);
-      form.append("test", "asda");
+      form.append("trackName", file.name);
+      console.log(file);
       await noHeaderAxios.post("track/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
     }
   };
