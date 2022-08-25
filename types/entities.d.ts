@@ -9,7 +9,8 @@ export type Track = {
 
 export type FileMap = {
   id: number;
-  fileType: number;
+  url: string;
+  type: number;
   ownerId: number;
   createdAt: number;
   updatedAt: number;

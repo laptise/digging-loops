@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import * as aws from 'aws-sdk';
 import Axios from 'axios';
 import * as jschardet from 'jschardet';
+import { FileMapService } from 'src/file-map/file-map.service';
 @Injectable()
 export class S3Service {
+  constructor(private fileMapService: FileMapService) {}
   s3 = new aws.S3({
     region: 'ap-northeast-2',
     accessKeyId: process.env.S3_ACCESS_KEY,
@@ -12,6 +14,7 @@ export class S3Service {
   });
 
   async upload(file: Express.Multer.File) {
+    this.fileMapService.getNewFileId(1);
     console.log(jschardet.detect(file.originalname));
     const uploadParams = {
       Bucket: 'digging-loops',
