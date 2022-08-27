@@ -3,9 +3,10 @@ import { S3Service } from './s3.service';
 import { S3Controller } from './s3.controller';
 import { FileMapService } from 'src/file-map/file-map.service';
 import { FileMapModule } from 'src/file-map/file-map.module';
+import { EventsModule } from 'src/events/events.module';
 
 @Module({
-  imports: [FileMapModule],
+  imports: [FileMapModule, EventsModule],
   providers: [S3Service],
   controllers: [S3Controller],
   exports: [S3Service],

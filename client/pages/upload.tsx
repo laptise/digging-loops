@@ -1,11 +1,16 @@
 import { User } from "@entities";
 import {
   Backdrop,
+  Box,
   Button,
   CircularProgress,
+  Dialog,
+  DialogTitle,
   FormControl,
   FormControlLabel,
   FormLabel,
+  LinearProgress,
+  LinearProgressProps,
   Paper,
   Radio,
   RadioGroup,
@@ -14,10 +19,11 @@ import {
   Typography,
 } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { clientAxios, noHeaderAxios } from "../axios/server";
 import { Layout } from "../components/layout";
 import { withAuth } from "../ssr/auth";
+import { LoadingButton } from "@mui/lab";
 import io from "socket.io-client";
 function RowRadioButtonsGroup() {
   return (
@@ -32,12 +38,69 @@ function RowRadioButtonsGroup() {
   );
 }
 
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(props.value)}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+const ProgressModal: FC<{ total: number; loaded: number; step: number; openState: [boolean, (val: boolean) => void] }> = ({
+  openState,
+  loaded,
+  total,
+  step,
+}) => {
+  const [open, setOpen] = openState;
+  const stepPoint = step * 10;
+  const progress = Math.floor((loaded / total) * 60) + stepPoint;
+  return (
+    <>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Dialog open={open}>
+        <DialogTitle>File Uploading</DialogTitle>
+        <Box sx={{ p: 2 }}>
+          <LinearProgressWithLabel value={progress} />
+          <LoadingButton onClick={() => setOpen(false)} loading={progress !== 100} variant="contained">
+            OK
+          </LoadingButton>
+        </Box>
+      </Dialog>
+    </>
+  );
+};
+
 const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [totalSize, setTotalSize] = useState(0);
+  const [loadedSize, setLoadedSize] = useState(0);
+  const [step, setStep] = useState(0);
   const upload = async () => {
     if (file) {
+      const socket = io("http://localhost:13018");
+      socket.on("connect", () => {
+        setLoadedSize(0);
+        setTotalSize(file.size);
+        setStep(0);
+      });
+      socket.on("events", (data) => {
+        if (data?.current) {
+          setLoadedSize(data.current);
+        }
+        if (data?.step) {
+          setStep(data.step);
+        }
+      });
       try {
         setIsUploading(true);
         const form = new FormData();
@@ -47,33 +110,13 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
         await noHeaderAxios.post("track/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
       } catch {
       } finally {
-        setIsUploading(false);
+        socket.disconnect();
       }
     }
   };
-  useEffect(() => {
-    const socket = io("http://localhost:13018");
-    socket.on("connect", function () {
-      console.log("Connected");
-
-      socket.emit("events", { test: "test" });
-      socket.emit("identity", 888, (response: any) => console.log("Identity:", response));
-    });
-    socket.on("events", function (data) {
-      console.log("event", data);
-    });
-    socket.on("exception", function (data) {
-      console.log("event", data);
-    });
-    socket.on("disconnect", function () {
-      console.log("Disconnected");
-    });
-  }, []);
   return (
     <Layout pageTitle="업로드" mainId="22" auth={auth}>
-      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isUploading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <ProgressModal openState={[isUploading, setIsUploading]} step={step} loaded={loadedSize} total={totalSize} />
       <Paper>
         <form
           ref={formRef}
