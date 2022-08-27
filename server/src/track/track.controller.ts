@@ -11,6 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from 'src/auth/guards/local-auth.guard';
 import { S3Service } from 'src/s3/s3.service';
+import { NewTrackInput } from './dto/index.input';
 
 @Controller('track')
 export class TrackController {
@@ -22,11 +23,9 @@ export class TrackController {
   async upload(
     @CurrentUser() user: User,
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: object,
+    @Body() body: NewTrackInput,
   ) {
-    console.log(body);
-    await this.s3Service.upload(file);
-    file.originalname;
+    await this.s3Service.upload(user.email, body.trackName, file);
     // const url = await this.s3Service.upload(filePath, type);
     return 'a';
   }

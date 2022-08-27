@@ -8,13 +8,12 @@ export class User extends BaseEntity implements Type {
   @Field(() => String)
   @PrimaryColumn('varchar')
   email: string;
-  @Field(() => String)
   @Column('varchar')
   password: string;
   @Field(() => String)
   @Column('varchar')
   name: string;
-  @Field(() => Boolean)
+  @Field(() => Number)
   @Column({ type: 'int', default: 0 })
   rank: number;
 }

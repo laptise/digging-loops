@@ -22,6 +22,7 @@ import { User } from './user/user';
 import { UserModule } from './user/user.module';
 import { FileMapModule } from './file-map/file-map.module';
 import { FileMap } from './file-map/file-map';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { FileMap } from './file-map/file-map';
     DictionaryModule,
     FeelingMstModule,
     FileMapModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

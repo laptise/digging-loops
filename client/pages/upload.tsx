@@ -1,11 +1,24 @@
 import { User } from "@entities";
-import { Button, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, Stack, TextField, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Paper,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clientAxios, noHeaderAxios } from "../axios/server";
 import { Layout } from "../components/layout";
 import { withAuth } from "../ssr/auth";
-
+import io from "socket.io-client";
 function RowRadioButtonsGroup() {
   return (
     <FormControl>
@@ -22,18 +35,45 @@ function RowRadioButtonsGroup() {
 const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const upload = async () => {
     if (file) {
-      const form = new FormData();
-      form.append("track", file);
-      form.append("trackName", file.name);
-      console.log(file);
-      await noHeaderAxios.post("track/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
+      try {
+        setIsUploading(true);
+        const form = new FormData();
+        form.append("track", file);
+        form.append("trackName", file.name);
+        console.log(file);
+        await noHeaderAxios.post("track/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
+      } catch {
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
+  useEffect(() => {
+    const socket = io("http://localhost:13018");
+    socket.on("connect", function () {
+      console.log("Connected");
 
+      socket.emit("events", { test: "test" });
+      socket.emit("identity", 888, (response: any) => console.log("Identity:", response));
+    });
+    socket.on("events", function (data) {
+      console.log("event", data);
+    });
+    socket.on("exception", function (data) {
+      console.log("event", data);
+    });
+    socket.on("disconnect", function () {
+      console.log("Disconnected");
+    });
+  }, []);
   return (
     <Layout pageTitle="업로드" mainId="22" auth={auth}>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isUploading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Paper>
         <form
           ref={formRef}

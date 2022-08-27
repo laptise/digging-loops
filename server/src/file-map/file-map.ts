@@ -1,16 +1,28 @@
 import { FileMap as Type } from '@entities';
-import { Column, PrimaryColumn } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+@ObjectType()
+@Entity()
 export class FileMap implements Type {
   @PrimaryColumn()
+  @Field(() => Number)
   id: number;
   @PrimaryColumn()
+  @Field(() => Number)
   type: number;
   @Column()
+  @Field(() => String, { nullable: true })
   url: string;
   @Column()
-  ownerId: number;
+  @Field(() => String)
+  name: string;
   @Column()
-  createdAt: number;
+  @Field(() => String)
+  ownerId: string;
   @Column()
-  updatedAt: number;
+  @Field(() => Date)
+  createdAt: Date;
+  @Column()
+  @Field(() => Date)
+  updatedAt: Date;
 }

@@ -11,9 +11,10 @@ export type FileMap = {
   id: number;
   url: string;
   type: number;
-  ownerId: number;
-  createdAt: number;
-  updatedAt: number;
+  name: string;
+  ownerId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type User = {
@@ -21,6 +22,7 @@ export type User = {
   password?: string;
   name: string;
   rank: number;
+  uploadedTracks?: Track[];
 };
 
 export type TrackTagMap = {
