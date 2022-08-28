@@ -1,7 +1,7 @@
 import { Button, Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { clientAxios } from "../axios/server";
+import { clientAxios } from "../networks/axios";
 import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 import crypto from "crypto";

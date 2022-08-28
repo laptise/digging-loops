@@ -2,7 +2,7 @@ import { IncomingMessage } from "http";
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from "next";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { ParsedUrlQuery } from "querystring";
-import { isBrowser, ssrAxios } from "../axios/server";
+import { isBrowser, ssrAxios } from "../networks/axios";
 import { User } from "@entities";
 export const checkAuthSSR = async (
   req: IncomingMessage & {

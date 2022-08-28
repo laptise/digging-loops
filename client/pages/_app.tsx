@@ -3,6 +3,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import type { AppProps } from "next/app";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../styles/globals.scss";
+import { ApolloProvider } from "@apollo/client";
+import { getApolloClient } from "../networks/apollo";
 
 const theme = createTheme({
   palette: {
@@ -17,9 +19,11 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider theme={theme}>
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <ApolloProvider client={getApolloClient()}>
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
 

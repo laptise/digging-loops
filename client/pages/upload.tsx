@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
 import { FC, useEffect, useRef, useState } from "react";
-import { clientAxios, noHeaderAxios } from "../axios/server";
+import { clientAxios, noHeaderAxios } from "../networks/axios";
 import { Layout } from "../components/layout";
 import { withAuth } from "../ssr/auth";
 import { LoadingButton } from "@mui/lab";

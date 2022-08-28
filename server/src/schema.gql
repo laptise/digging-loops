@@ -27,4 +27,5 @@ scalar DateTime
 type Query {
   sayHello: String!
   getUser(id: String!): User!
+  getProfile: User!
 }

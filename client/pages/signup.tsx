@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { clientAxios } from "../axios/server";
+import { clientAxios } from "../networks/axios";
 import crypto from "crypto";
 import { AxiosError } from "axios";
 import { ErrorHandler } from "../errors/handler";

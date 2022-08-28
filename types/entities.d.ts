@@ -22,7 +22,7 @@ export type User = {
   password?: string;
   name: string;
   rank: number;
-  uploadedTracks?: Track[];
+  uploadedTracks?: FileMap[];
 };
 
 export type TrackTagMap = {
