@@ -4,6 +4,7 @@ import {
   faBars,
   faChevronLeft,
   faCloudArrowUp,
+  faCloudCheck,
   faIdCard,
   faMagnifyingGlass,
   faRightFromBracket,
@@ -99,7 +100,7 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
         <Divider />
         <Link passHref={true} href="/profile">
           <ListItemButton component="a" href="#customized-list">
-            <Tooltip title="My profile" placement="right">
+            <Tooltip title="My profile" placement="right" enterDelay={50}>
               <ListItemAvatar>
                 <Avatar alt={auth?.name} style={{ margin: "auto" }} />
               </ListItemAvatar>
@@ -109,16 +110,16 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
         <Divider />
         <Link passHref={true} href="/library">
           <ListItemButton component="a">
-            <Tooltip title="My uploads" placement="right">
+            <Tooltip title="My uploads" placement="right" enterDelay={50}>
               <ListItemIcon style={{ minWidth: 30 }}>
-                <FontAwesomeIcon icon={faAlbumCollection} color="white" size="lg" style={{ margin: "auto" }} />
+                <FontAwesomeIcon icon={faCloudCheck} color="white" size="lg" style={{ margin: "auto" }} />
               </ListItemIcon>
             </Tooltip>
           </ListItemButton>
         </Link>
         <Link passHref={true} href="/upload">
           <ListItemButton component="a">
-            <Tooltip title="Upload new file" placement="right">
+            <Tooltip title="Upload new file" placement="right" enterDelay={50}>
               <ListItemIcon style={{ minWidth: 30 }}>
                 <FontAwesomeIcon icon={faCloudArrowUp} color="white" size="lg" style={{ margin: "auto" }} />
               </ListItemIcon>
@@ -127,7 +128,7 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
         </Link>
         <Divider />
         <ListItemButton component="a" onClick={logout}>
-          <Tooltip title="Signout" placement="right">
+          <Tooltip title="Signout" placement="right" enterDelay={50}>
             <ListItemIcon style={{ minWidth: 30 }}>
               <FontAwesomeIcon icon={faRightFromBracket} color="white" size="lg" style={{ margin: "auto" }} />
             </ListItemIcon>

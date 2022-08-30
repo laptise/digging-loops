@@ -25,6 +25,7 @@ import { Layout } from "../components/layout";
 import { withAuth } from "../ssr/auth";
 import { LoadingButton } from "@mui/lab";
 import io from "socket.io-client";
+import { KeySelector } from "../components/key-selector";
 function RowRadioButtonsGroup() {
   return (
     <FormControl>
@@ -130,6 +131,12 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
               파일 업로드
             </Typography>
             <RowRadioButtonsGroup />
+            <FormControl>
+              <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
+                키
+              </FormLabel>
+              <KeySelector />
+            </FormControl>
             <FormControl>
               <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
                 파일명
