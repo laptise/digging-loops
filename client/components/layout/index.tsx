@@ -21,6 +21,7 @@ import {
   Modal,
   ModalProps,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
@@ -52,7 +53,7 @@ export const Layout: FC<LayoutProps> = ({ children, pageTitle, mainId, auth }) =
   return (
     <>
       <Stack direction="row">
-        {auth && <DrawerMenu drawerOpenState={drawerOpenState} width={200} auth={auth} />}
+        {auth && <DrawerMenu drawerOpenState={drawerOpenState} width={70} auth={auth} />}
         <div className={styles.container} style={{ flex: 1 }}>
           <AppBarr auth={auth} drawerOpenState={drawerOpenState} />
           <Head>
@@ -85,62 +86,52 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
   return (
     <Drawer
       open={drawerOpen}
-      PaperProps={{ style: { position: "fixed", top: 0, width } }}
+      PaperProps={{ style: { position: "fixed", top: 0, width, backgroundColor: "#5d408f" } }}
       variant="persistent"
       style={{ width: drawerOpen ? width : 0, transition: "all 300ms", fontSize: 16 }}
     >
-      <Stack>
+      <Stack style={{ color: "white", alignItems: "center" }} spacing={1}>
         <Stack style={{ minHeight: 64 }} justifyContent="center">
           <Button onClick={() => setDrawerOpen(false)} style={{ width: 60, marginLeft: "auto", height: "100%" }}>
-            <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+            <FontAwesomeIcon icon={faChevronLeft} size="lg" color="white" style={{ margin: "auto" }} />
           </Button>
         </Stack>
         <Divider />
-        <ListItemButton component="a" href="#customized-list">
-          <ListItemAvatar>
-            <Avatar alt={auth?.name} />
-          </ListItemAvatar>
-          <ListItemText
-            sx={{ my: 0 }}
-            primary={auth?.name}
-            primaryTypographyProps={{
-              fontSize: 20,
-              fontWeight: "medium",
-              letterSpacing: 0,
-            }}
-          />
-        </ListItemButton>
-        <Divider />
         <Link passHref={true} href="/profile">
           <ListItemButton component="a" href="#customized-list">
-            <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
-              <FontAwesomeIcon icon={faIdCard} size="lg" style={{ margin: "auto" }} />
-            </ListItemIcon>
-            <Typography style={{ fontWeight: "medium", fontSize: 18 }}>내 프로필</Typography>
+            <Tooltip title="My profile" placement="right">
+              <ListItemAvatar>
+                <Avatar alt={auth?.name} style={{ margin: "auto" }} />
+              </ListItemAvatar>
+            </Tooltip>
           </ListItemButton>
         </Link>
+        <Divider />
         <Link passHref={true} href="/library">
           <ListItemButton component="a">
-            <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
-              <FontAwesomeIcon icon={faAlbumCollection} size="lg" style={{ margin: "auto" }} />
-            </ListItemIcon>
-            <Typography style={{ fontWeight: "medium", fontSize: 18 }}>내 라이브러리</Typography>
+            <Tooltip title="My uploads" placement="right">
+              <ListItemIcon style={{ minWidth: 30 }}>
+                <FontAwesomeIcon icon={faAlbumCollection} color="white" size="lg" style={{ margin: "auto" }} />
+              </ListItemIcon>
+            </Tooltip>
           </ListItemButton>
         </Link>
         <Link passHref={true} href="/upload">
           <ListItemButton component="a">
-            <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
-              <FontAwesomeIcon icon={faCloudArrowUp} size="lg" style={{ margin: "auto" }} />
-            </ListItemIcon>
-            <Typography style={{ fontWeight: "medium", fontSize: 18 }}>업로드</Typography>
+            <Tooltip title="Upload new file" placement="right">
+              <ListItemIcon style={{ minWidth: 30 }}>
+                <FontAwesomeIcon icon={faCloudArrowUp} color="white" size="lg" style={{ margin: "auto" }} />
+              </ListItemIcon>
+            </Tooltip>
           </ListItemButton>
         </Link>
         <Divider />
         <ListItemButton component="a" onClick={logout}>
-          <ListItemIcon style={{ minWidth: 30, marginRight: 10 }}>
-            <FontAwesomeIcon icon={faRightFromBracket} size="lg" style={{ margin: "auto" }} />
-          </ListItemIcon>
-          <Typography style={{ fontWeight: "medium", fontSize: 18 }}>로그아웃</Typography>
+          <Tooltip title="Signout" placement="right">
+            <ListItemIcon style={{ minWidth: 30 }}>
+              <FontAwesomeIcon icon={faRightFromBracket} color="white" size="lg" style={{ margin: "auto" }} />
+            </ListItemIcon>
+          </Tooltip>
         </ListItemButton>
       </Stack>
     </Drawer>
