@@ -3,7 +3,13 @@ import styles from "../styles/Components.module.scss";
 
 const Key: FC<{ keyName?: string; isSharp?: boolean; setPicked?: (val: string) => void }> = ({ keyName, isSharp, setPicked }) => {
   return (
-    <div onMouseDown={() => setPicked?.(keyName || "")} className={styles.keySelectorKey} data-ghost-key={!keyName} data-is-sharp={isSharp}>
+    <div
+      onMouseDown={() => setPicked?.(keyName || "")}
+      onTouchStart={() => setPicked?.(keyName || "")}
+      className={styles.keySelectorKey}
+      data-ghost-key={!keyName}
+      data-is-sharp={isSharp}
+    >
       {keyName}
     </div>
   );
