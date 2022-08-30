@@ -8,10 +8,11 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Link from "next/link";
 
-function a11yProps(index: number) {
+function a11yProps(index: number, value: number) {
   return {
     id: `main-tab-${index}`,
     "aria-controls": `main-tabpanel-${index}`,
+    style: { color: index === value ? "#5d408f" : undefined, fontWeight: "bold" },
   };
 }
 type UploadedItemsLayoutProps = { value: number; children: ReactNode; auth: User | null };
@@ -33,13 +34,13 @@ export const LayoutTabs: FC<{ value: number }> = ({ value }) => {
   return (
     <Tabs value={value} aria-label="basic tabs example">
       <Link href="/" passHref={true}>
-        <Tab label="SAMPLES" {...a11yProps(0)} />
+        <Tab label="SAMPLES" {...a11yProps(0, value)} />
       </Link>
       <Link href="/samples" passHref={true}>
-        <Tab label="PACKS" {...a11yProps(1)} />
+        <Tab label="PACKS" {...a11yProps(1, value)} />
       </Link>
       <Link href="/presets" passHref={true}>
-        <Tab label="MIDI" {...a11yProps(2)} />
+        <Tab label="MIDI" {...a11yProps(2, value)} />
       </Link>
     </Tabs>
   );
