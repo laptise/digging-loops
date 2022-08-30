@@ -1,0 +1,14 @@
+#radiusInput {
+  background-color: rgb(237, 237, 237);
+  padding: 10px;
+  border-radius: 20px;
+  input {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    outline: none;
+  }
+  svg {
+    margin-right: 5px;
+    color: rgb(98, 98, 98);
+  }
+}

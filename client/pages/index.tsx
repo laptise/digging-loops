@@ -2,7 +2,7 @@ import { User } from "@entities";
 import { Box, Stack, Typography } from "@mui/material";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import { TopLayout } from "../components/top/top-layout";
+import { TopLayout } from "../components/layout/top/top-layout";
 import { withAuth } from "../ssr/auth";
 const TopPreset = () => {
   return (

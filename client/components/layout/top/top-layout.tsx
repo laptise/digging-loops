@@ -1,9 +1,9 @@
 import { User } from "@entities";
 import { Box, Paper } from "@mui/material";
 import { FC, ReactNode } from "react";
-import { Layout } from "../layout";
+import { Layout } from "..";
 import { TopTabs } from "./tabs";
-import styles from "../../styles/Index.module.scss";
+import styles from "../../../styles/Index.module.scss";
 
 type TopLayoutProps = { value: number; children: ReactNode; auth: User | null };
 export const TopLayout: FC<TopLayoutProps> = ({ value, children, auth }) => {

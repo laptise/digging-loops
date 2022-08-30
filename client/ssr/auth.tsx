@@ -60,7 +60,7 @@ export async function requireAuth<
 >(context: GetServerSidePropsContext<Q, D>, fn?: RequireAuthFn<P, Q, D>): Promise<GetServerSidePropsResult<P>> {
   const auth = await checkAuthSSR(context.req);
   if (!auth) {
-    return { redirect: { destination: "/signin", permanent: false } };
+    return { redirect: { destination: "/login", permanent: false } };
   }
   const blankProps = { props: {} } as { props: P };
   if (fn) {

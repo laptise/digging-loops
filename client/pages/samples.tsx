@@ -1,7 +1,7 @@
 import { User } from "@entities";
 import { Box, Stack, Typography } from "@mui/material";
 import type { GetServerSideProps, NextPage } from "next";
-import { TopLayout } from "../components/top/top-layout";
+import { TopLayout } from "../components/layout/top/top-layout";
 import { withAuth } from "../ssr/auth";
 
 const Samples: NextPage<{ auth: User | null }> = ({ auth }) => {
