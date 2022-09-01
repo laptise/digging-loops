@@ -101,11 +101,12 @@ const ImageUploader = () => {
       <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
         사진
       </FormLabel>
-      <Box
-        onClick={() => fileInput.current?.click()}
-        style={{ minWidth: 120, minHeight: 120, cursor: "pointer", aspectRatio: 1 as any, border: "1px solid #ccc" }}
-      ></Box>
-      <img alt="test" src={imgUrl || ""} />
+      <Button variant="contained" onClick={() => fileInput.current?.click()}>
+        Edit Thumbnail
+      </Button>
+      <Box style={{ width: 300, aspectRatio: "1", display: "flex", justifyContent: "center" }}>
+        <img alt="test" style={{ maxWidth: "100%", maxHeight: "100%", margin: "auto" }} src={imgUrl || ""} />
+      </Box>
       <input
         onChange={(e) => setImg(e.target?.files?.[0] || null)}
         ref={fileInput}
