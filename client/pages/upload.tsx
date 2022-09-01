@@ -19,12 +19,13 @@ import {
   Typography,
 } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
-import { FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { clientAxios, noHeaderAxios } from "../networks/axios";
 import { Layout } from "../components/layout";
 import { withAuth } from "../ssr/auth";
 import { LoadingButton } from "@mui/lab";
 import io from "socket.io-client";
+import Image from "next/image";
 import { KeySelector } from "../components/key-selector";
 function RowRadioButtonsGroup() {
   return (
@@ -76,6 +77,42 @@ const ProgressModal: FC<{ total: number; loaded: number; step: number; openState
         </Box>
       </Dialog>
     </>
+  );
+};
+
+const ImageUploader = () => {
+  const fileInput = useRef<HTMLInputElement | null>(null);
+  const imgTag = useRef<HTMLImageElement | null>(null);
+  const [img, setImg] = useState<File | null>(null);
+  const [imgUrl, setimgUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (img) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setimgUrl(reader.result as string);
+      };
+      reader.readAsDataURL(img);
+    }
+    console.log(img);
+  }, [img]);
+  return (
+    <FormControl>
+      <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
+        사진
+      </FormLabel>
+      <Box
+        onClick={() => fileInput.current?.click()}
+        sx={{ minWidth: 120, minHeight: 120, cursor: "pointer", aspectRatio: 1, border: "1px solid #ccc" }}
+      ></Box>
+      <img alt="test" src={imgUrl || ""} />
+      <input
+        onChange={(e) => setImg(e.target?.files?.[0] || null)}
+        ref={fileInput}
+        type="file"
+        style={{ display: "none" }}
+        accept="image/png, image/jpeg"
+      />
+    </FormControl>
   );
 };
 
@@ -131,6 +168,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
               파일 업로드
             </Typography>
             <RowRadioButtonsGroup />
+            <ImageUploader />
             <FormControl>
               <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
                 키
