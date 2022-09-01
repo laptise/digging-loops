@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { User } from "@entities";
 import {
   Backdrop,
@@ -102,7 +103,7 @@ const ImageUploader = () => {
       </FormLabel>
       <Box
         onClick={() => fileInput.current?.click()}
-        sx={{ minWidth: 120, minHeight: 120, cursor: "pointer", aspectRatio: 1, border: "1px solid #ccc" }}
+        style={{ minWidth: 120, minHeight: 120, cursor: "pointer", aspectRatio: 1 as any, border: "1px solid #ccc" }}
       ></Box>
       <img alt="test" src={imgUrl || ""} />
       <input
