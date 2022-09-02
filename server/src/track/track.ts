@@ -8,12 +8,15 @@ export class Track extends BaseEntity implements IF {
   @PrimaryGeneratedColumn()
   @Field(() => String)
   id: string;
+  @Column()
+  @Field(() => String)
+  ownerId: string;
   @Column('varchar')
   @Field(() => String)
   title: string;
-  @Column('varchar')
-  @Field(() => String)
-  url: string;
+  @Column('bigint')
+  @Field(() => Number)
+  fileMapId: number;
   @Column({ type: 'int', default: 0 })
   @Field(() => Boolean)
   isDisabled: boolean;
@@ -23,4 +26,10 @@ export class Track extends BaseEntity implements IF {
   @Column({ type: 'int', default: 0 })
   @Field(() => Number)
   purchasedCount: number;
+  @Column({ type: 'varchar' })
+  @Field(() => String, { nullable: true })
+  thumbnailUrl: string;
+  @Column({ type: 'varchar' })
+  @Field(() => String, { nullable: true })
+  keyChord: string;
 }

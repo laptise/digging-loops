@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { User } from "@entities";
+import { LoadingButton } from "@mui/lab";
 import {
   Backdrop,
   Box,
@@ -20,14 +21,14 @@ import {
   Typography,
 } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import { clientAxios, noHeaderAxios } from "../networks/axios";
-import { Layout } from "../components/layout";
-import { withAuth } from "../ssr/auth";
-import { LoadingButton } from "@mui/lab";
+import { FC, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import Image from "next/image";
 import { KeySelector } from "../components/key-selector";
+import { Layout } from "../components/layout";
+import { noHeaderAxios } from "../networks/axios";
+import { withAuth } from "../ssr/auth";
+import { AddNewTrackPayload } from "@dtos";
+import { buildForm } from "../utils/form-builder";
 function RowRadioButtonsGroup() {
   return (
     <FormControl>
@@ -124,6 +125,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [totalSize, setTotalSize] = useState(0);
   const [loadedSize, setLoadedSize] = useState(0);
+  const [title, setTitle] = useState<string>("");
   const [step, setStep] = useState(0);
   const upload = async () => {
     if (file) {
@@ -143,10 +145,8 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
       });
       try {
         setIsUploading(true);
-        const form = new FormData();
+        const form = buildForm<AddNewTrackPayload>({ trackName: file.name, keyChord: "A", title });
         form.append("track", file);
-        form.append("trackName", file.name);
-        console.log(file);
         await noHeaderAxios.post("track/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
       } catch {
       } finally {
@@ -181,7 +181,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
               <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
                 파일명
               </FormLabel>
-              <TextField name="aak" id="filename-input" variant="outlined" />
+              <TextField value={title} onChange={(e) => setTitle(e.target.value)} id="filename-input" variant="outlined" />
             </FormControl>
             <input
               onChange={(e) => {

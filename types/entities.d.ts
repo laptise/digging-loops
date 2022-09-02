@@ -1,10 +1,13 @@
 export type Track = {
   id: string;
+  ownerId: string;
   title: string;
-  url: string;
+  fileMapId: number;
   isDisabled: boolean;
   playedCount: number;
   purchasedCount: number;
+  thumbnailUrl: string;
+  keyChord: string;
 };
 
 export type FileMap = {

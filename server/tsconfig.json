@@ -18,7 +18,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@entities": ["../types/entities.d.ts"]
+      "@entities": ["../types/entities.d.ts"],
+      "@dtos": ["../types/dtos.d.ts"]
     }
   }
 }

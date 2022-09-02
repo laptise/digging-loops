@@ -46,6 +46,6 @@ export class S3Service {
       });
     });
     this.eventsGateway.sendTest(4, file.size, file.size);
-    await this.fileMapService.updateUrl(newFileMap, uploadedUrl);
+    return await this.fileMapService.updateUrl(newFileMap, uploadedUrl);
   }
 }

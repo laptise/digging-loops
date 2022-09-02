@@ -15,7 +15,8 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@entities": ["../types/entities.d.ts"]
+      "@entities": ["../types/entities.d.ts"],
+      "@dtos": ["../types/dtos.d.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./node_modules/wicg-file-system-access/index.d.ts"],

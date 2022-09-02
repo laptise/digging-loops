@@ -14,6 +14,7 @@ export class FileMapService {
     fileType: number,
     fileName: string,
   ) {
+    console.log(ownerId, fileType, fileName);
     const fileId = await this.getNewFileId(fileType);
     const entity = this.repo.create({
       id: fileId,
@@ -25,7 +26,7 @@ export class FileMapService {
   }
   public async updateUrl(fileMap: FileMap, url: string) {
     fileMap.url = url;
-    await this.repo.save(fileMap);
+    return await this.repo.save(fileMap);
   }
   private async getNewFileId(fileType: number) {
     const res = await this.repo.manager.query('select get_new_file_id(?) id', [
