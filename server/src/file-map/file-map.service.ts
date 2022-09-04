@@ -9,6 +9,7 @@ export class FileMapService {
     @InjectRepository(FileMap)
     private repo: Repository<FileMap>,
   ) {}
+
   public async addNewFileMap(
     ownerId: string,
     fileType: number,
@@ -24,17 +25,24 @@ export class FileMapService {
     });
     return await this.repo.save(entity);
   }
+
   public async updateUrl(fileMap: FileMap, url: string) {
     fileMap.url = url;
     return await this.repo.save(fileMap);
   }
+
   private async getNewFileId(fileType: number) {
     const res = await this.repo.manager.query('select get_new_file_id(?) id', [
       fileType,
     ]);
     return res?.[0]?.id;
   }
+
   public async getUserUploadedMaps(userId: string) {
     return await this.repo.find({ where: { ownerId: userId } });
+  }
+
+  public async getFileMapByKeys(id: number, type: number) {
+    return await this.repo.findOne({ where: { id, type } });
   }
 }

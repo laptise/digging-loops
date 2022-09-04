@@ -72,13 +72,13 @@ const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) =>
           <TableBody>
             {view?.uploadedTracks?.map((x) => (
               <TableRow key={x.id}>
-                <TableCell>{x.name}</TableCell>
+                <TableCell>{x.title}</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
-                <TableCell>{format(new Date(x.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell>
+                {/* <TableCell>{format(new Date(x.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell> */}
                 <TableCell></TableCell>
               </TableRow>
             ))}

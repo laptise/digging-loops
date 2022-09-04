@@ -6,7 +6,7 @@ type User {
   email: String!
   name: String!
   rank: Float!
-  uploadedTracks: [FileMap!]!
+  uploadedTracks: [Track!]!
 }
 
 type FileMap {
@@ -23,6 +23,20 @@ type FileMap {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type Track {
+  id: String!
+  ownerId: String!
+  title: String!
+  fileMapId: Float!
+  isDisabled: Boolean!
+  playedCount: Float!
+  purchasedCount: Float!
+  thumbnailFileMapId: Float!
+  keyChord: String
+  file: FileMap!
+  thumbnail: FileMap!
+}
 
 type Query {
   sayHello: String!

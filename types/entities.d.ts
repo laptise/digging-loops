@@ -8,6 +8,8 @@ export type Track = {
   purchasedCount: number;
   thumbnailFileMapId: number;
   keyChord: string;
+  file?: FileMap;
+  thumbnail?: FileMap;
 };
 
 export type FileMap = {
@@ -25,7 +27,7 @@ export type User = {
   password?: string;
   name: string;
   rank: number;
-  uploadedTracks?: FileMap[];
+  uploadedTracks?: Track[];
 };
 
 export type TrackTagMap = {

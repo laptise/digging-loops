@@ -29,4 +29,7 @@ export class TrackService {
     });
     await this.repo.save(newEntity);
   }
+  public async getUserUploadedTracks(ownerId: string) {
+    return await this.repo.find({ where: { ownerId: ownerId } });
+  }
 }
