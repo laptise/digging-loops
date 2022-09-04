@@ -29,6 +29,7 @@ import { noHeaderAxios } from "../networks/axios";
 import { withAuth } from "../ssr/auth";
 import { AddNewTrackPayload } from "@dtos";
 import { buildForm } from "../utils/form-builder";
+import useImageUploader from "../hooks/use-image-uploader";
 function RowRadioButtonsGroup() {
   return (
     <FormControl>
@@ -82,43 +83,6 @@ const ProgressModal: FC<{ total: number; loaded: number; step: number; openState
   );
 };
 
-const ImageUploader = () => {
-  const fileInput = useRef<HTMLInputElement | null>(null);
-  const imgTag = useRef<HTMLImageElement | null>(null);
-  const [img, setImg] = useState<File | null>(null);
-  const [imgUrl, setimgUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (img) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setimgUrl(reader.result as string);
-      };
-      reader.readAsDataURL(img);
-    }
-    console.log(img);
-  }, [img]);
-  return (
-    <FormControl>
-      <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
-        사진
-      </FormLabel>
-      <Button variant="contained" onClick={() => fileInput.current?.click()}>
-        Edit Thumbnail
-      </Button>
-      <Box style={{ width: 300, aspectRatio: "1", display: "flex", justifyContent: "center" }}>
-        <img alt="test" style={{ maxWidth: "100%", maxHeight: "100%", margin: "auto" }} src={imgUrl || ""} />
-      </Box>
-      <input
-        onChange={(e) => setImg(e.target?.files?.[0] || null)}
-        ref={fileInput}
-        type="file"
-        style={{ display: "none" }}
-        accept="image/png, image/jpeg"
-      />
-    </FormControl>
-  );
-};
-
 const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -127,6 +91,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const [loadedSize, setLoadedSize] = useState(0);
   const [title, setTitle] = useState<string>("");
   const [step, setStep] = useState(0);
+  const { Component: ImageUploaderC, img, imgUrl } = useImageUploader();
   const upload = async () => {
     if (file) {
       const socket = io("http://localhost:13018");
@@ -145,8 +110,9 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
       });
       try {
         setIsUploading(true);
-        const form = buildForm<AddNewTrackPayload>({ trackName: file.name, keyChord: "A", title });
+        const form = buildForm<AddNewTrackPayload>({ trackName: file.name, thumbnailName: img?.name || "", keyChord: "A", title });
         form.append("track", file);
+        if (img) form.append("thumbnail", img);
         await noHeaderAxios.post("track/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
       } catch {
       } finally {
@@ -170,7 +136,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
               파일 업로드
             </Typography>
             <RowRadioButtonsGroup />
-            <ImageUploader />
+            <ImageUploaderC />
             <FormControl>
               <FormLabel htmlFor="filename-input" id="demo-row-radio-buttons-group-label">
                 키

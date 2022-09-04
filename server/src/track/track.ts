@@ -26,9 +26,9 @@ export class Track extends BaseEntity implements IF {
   @Column({ type: 'int', default: 0 })
   @Field(() => Number)
   purchasedCount: number;
-  @Column({ type: 'varchar' })
-  @Field(() => String, { nullable: true })
-  thumbnailUrl: string;
+  @Column('bigint')
+  @Field(() => Number)
+  thumbnailFileMapId: number;
   @Column({ type: 'varchar' })
   @Field(() => String, { nullable: true })
   keyChord: string;

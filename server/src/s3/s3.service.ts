@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as aws from 'aws-sdk';
 import Axios from 'axios';
+import { FileCategory } from 'src/constants';
 import { EventsGateway } from 'src/events/events.gateway';
 import { FileMapService } from 'src/file-map/file-map.service';
 @Injectable()
@@ -16,11 +17,16 @@ export class S3Service {
     signatureVersion: 'v4',
   });
 
-  async upload(ownerId: string, fileName: string, file: Express.Multer.File) {
+  async upload(
+    ownerId: string,
+    fileName: string,
+    file: Express.Multer.File,
+    fileCategory: FileCategory,
+  ) {
     this.eventsGateway.sendTest(1, 0, file.size);
     const newFileMap = await this.fileMapService.addNewFileMap(
       ownerId,
-      10,
+      fileCategory,
       fileName,
     );
     const re = /(?:\.([^.]+))?$/;

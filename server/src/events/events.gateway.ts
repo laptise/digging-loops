@@ -28,18 +28,15 @@ export class EventsGateway
   }
 
   handleConnection(client: any) {
-    console.log('new client');
     this.wsClients.push(client);
   }
 
   handleDisconnect(client) {
-    console.log('bye client');
     this.wsClients = [...this.wsClients.filter((x) => x !== client)];
   }
 
   @SubscribeMessage('events')
   findAll(@MessageBody() data: any): Observable<WsResponse<number>> {
-    console.log(data);
     this.server.emit('events', { data: 'fffkk' });
     return from([1, 2, 3]).pipe(
       map((item) => ({ event: 'events', data: item })),

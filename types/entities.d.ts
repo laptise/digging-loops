@@ -6,7 +6,7 @@ export type Track = {
   isDisabled: boolean;
   playedCount: number;
   purchasedCount: number;
-  thumbnailUrl: string;
+  thumbnailFileMapId: number;
   keyChord: string;
 };
 

@@ -14,15 +14,17 @@ export class TrackService {
   public async addNew(
     { email: ownerId }: User,
     { keyChord, title }: NewTrackInput,
-    { id: fileMapId }: FileMap,
+    trackFileMap: FileMap,
+    thumbnailFileMap: FileMap,
   ) {
     const newEntity = this.repo.create({
       title: title,
-      fileMapId,
+      fileMapId: trackFileMap.id,
       isDisabled: false,
       purchasedCount: 0,
       playedCount: 0,
       keyChord: keyChord,
+      thumbnailFileMapId: thumbnailFileMap.id,
       ownerId,
     });
     await this.repo.save(newEntity);

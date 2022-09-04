@@ -1,4 +1,5 @@
 import { User } from '@entities';
+import { UploadedFiles } from '@nestjs/common';
 import {
   Body,
   Controller,
@@ -8,8 +9,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileInterceptor,
+  FileFieldsInterceptor,
+} from '@nestjs/platform-express';
 import { CurrentUser } from 'src/auth/guards/local-auth.guard';
+import { FileCategory } from 'src/constants';
 import { S3Service } from 'src/s3/s3.service';
 import { NewTrackInput } from './dto/index.input';
 import { TrackService } from './track.service';
@@ -23,19 +28,39 @@ export class TrackController {
 
   @Post('upload')
   @UseGuards(AuthGuard('jwt')) //
-  @UseInterceptors(FileInterceptor('track'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'track', maxCount: 1 },
+      { name: 'thumbnail', maxCount: 1 },
+    ]),
+  )
   async upload(
     @CurrentUser() user: User,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles()
+    {
+      track,
+      thumbnail,
+    }: {
+      track: Express.Multer.File[];
+      thumbnail: Express.Multer.File[];
+    },
     @Body() data: NewTrackInput,
   ) {
     console.log(data);
-    const fileMap = await this.s3Service.upload(
+    const trackFileMap = await this.s3Service.upload(
       user.email,
       data.trackName,
-      file,
+      track[0],
+      FileCategory.UploadSample,
     );
-    await this.trackService.addNew(user, data, fileMap);
+    const thumbnailFileMap = await this.s3Service.upload(
+      user.email,
+      data.thumbnailName,
+      thumbnail[0],
+      FileCategory.Thumbnail,
+    );
+    await this.trackService.addNew(user, data, trackFileMap, thumbnailFileMap);
+    console.log(thumbnailFileMap);
     // const url = await this.s3Service.upload(filePath, type);
     return 'a';
   }
