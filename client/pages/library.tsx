@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { User } from "@entities";
 import { faCloudArrowUp } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Button, IconButton, Paper, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, Paper, Stack, Tab, Tabs, TextField, Typography, Link as MLink } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -59,6 +59,7 @@ const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) =>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>제목</TableCell>
               <TableCell>파일명</TableCell>
               <TableCell>태그</TableCell>
               <TableCell>길이</TableCell>
@@ -73,12 +74,17 @@ const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) =>
             {view?.uploadedTracks?.map((x) => (
               <TableRow key={x.id}>
                 <TableCell>{x.title}</TableCell>
+                <TableCell>
+                  <MLink download={x.file?.name} href={x.file?.url}>
+                    {x.file?.name}
+                  </MLink>
+                </TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
-                <TableCell></TableCell>
-                {/* <TableCell>{format(new Date(x.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell> */}
+                <TableCell>{x.keyChord}</TableCell>
+                <TableCell>{format(new Date(x?.file?.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             ))}
@@ -98,8 +104,18 @@ export const getServerSideProps: GetServerSideProps = (ctx) =>
           email
           uploadedTracks {
             id
-            name
-            createdAt
+            title
+            keyChord
+            fileMapId
+            file {
+              url
+              createdAt
+              name
+            }
+            thumbnail {
+              url
+              createdAt
+            }
           }
         }
       }

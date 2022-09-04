@@ -30,14 +30,10 @@ export class S3Service {
       fileCategory,
       fileName,
     );
-    const re = /(?:\.([^.]+))?$/;
-    const ext = re.exec(file.originalname)[1];
-    file.buffer;
-    console.log(file);
     const uploadParams = {
       Bucket: 'digging-loops',
       // Add the required 'Key' parameter using the 'path' module.
-      Key: `${newFileMap.type}/${newFileMap.id}.${ext}`,
+      Key: `${newFileMap.type}/${newFileMap.id}/${fileName}`,
       // Add the required 'Body' parameter
       Body: file.buffer,
     };
