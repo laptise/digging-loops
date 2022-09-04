@@ -1,20 +1,17 @@
 import { User } from '@entities';
-import { UploadedFiles } from '@nestjs/common';
 import {
   Body,
   Controller,
   Post,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  FileInterceptor,
-  FileFieldsInterceptor,
-} from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from 'src/auth/guards/local-auth.guard';
 import { FileCategory } from 'src/constants';
+import { EventsGateway } from 'src/events/events.gateway';
 import { S3Service } from 'src/s3/s3.service';
 import { NewTrackInput } from './dto/index.input';
 import { TrackService } from './track.service';
@@ -24,6 +21,7 @@ export class TrackController {
   constructor(
     private readonly s3Service: S3Service,
     private readonly trackService: TrackService,
+    private eventsGateway: EventsGateway,
   ) {}
 
   @Post('upload')
@@ -52,6 +50,7 @@ export class TrackController {
       data.trackName,
       track[0],
       FileCategory.UploadSample,
+      true,
     );
     const thumbnailFileMap = await this.s3Service.upload(
       user.email,
@@ -59,6 +58,7 @@ export class TrackController {
       thumbnail[0],
       FileCategory.Thumbnail,
     );
+    this.eventsGateway.sendTest(5, 0, 0);
     await this.trackService.addNew(user, data, trackFileMap, thumbnailFileMap);
     console.log(thumbnailFileMap);
     // const url = await this.s3Service.upload(filePath, type);

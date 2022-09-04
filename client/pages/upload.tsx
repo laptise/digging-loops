@@ -23,7 +23,7 @@ import {
 import { GetServerSideProps, NextPage } from "next";
 import { FC, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import { KeySelector } from "../components/key-selector";
+import { useKeySelector } from "../components/key-selector";
 import { Layout } from "../components/layout";
 import { noHeaderAxios } from "../networks/axios";
 import { withAuth } from "../ssr/auth";
@@ -64,7 +64,7 @@ const ProgressModal: FC<{ total: number; loaded: number; step: number; openState
 }) => {
   const [open, setOpen] = openState;
   const stepPoint = step * 10;
-  const progress = Math.floor((loaded / total) * 60) + stepPoint;
+  const progress = Math.floor((loaded / total) * 50) + stepPoint;
   return (
     <>
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
@@ -92,8 +92,10 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const [title, setTitle] = useState<string>("");
   const [step, setStep] = useState(0);
   const { Component: ImageUploaderC, img, imgUrl } = useImageUploader();
+  const { KeySelector, value: keyChord } = useKeySelector();
+  const uploadable = keyChord && file && img && title;
   const upload = async () => {
-    if (file) {
+    if (uploadable) {
       const socket = io("http://localhost:13018");
       socket.on("connect", () => {
         setLoadedSize(0);
@@ -101,6 +103,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
         setStep(0);
       });
       socket.on("events", (data) => {
+        console.log(data);
         if (data?.current) {
           setLoadedSize(data.current);
         }
@@ -110,7 +113,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
       });
       try {
         setIsUploading(true);
-        const form = buildForm<AddNewTrackPayload>({ trackName: file.name, thumbnailName: img?.name || "", keyChord: "A", title });
+        const form = buildForm<AddNewTrackPayload>({ trackName: file.name, thumbnailName: img?.name || "", keyChord, title });
         form.append("track", file);
         if (img) form.append("thumbnail", img);
         await noHeaderAxios.post("track/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
@@ -159,7 +162,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
               name="file"
               type="file"
             />
-            <Button variant="contained" type="submit">
+            <Button disabled={!uploadable} variant="contained" type="submit">
               업로드
             </Button>
           </Stack>

@@ -22,8 +22,9 @@ export class S3Service {
     fileName: string,
     file: Express.Multer.File,
     fileCategory: FileCategory,
+    sendStatus = false,
   ) {
-    this.eventsGateway.sendTest(1, 0, file.size);
+    if (sendStatus) this.eventsGateway.sendTest(1, 0, file.size);
     const newFileMap = await this.fileMapService.addNewFileMap(
       ownerId,
       fileCategory,
@@ -40,18 +41,18 @@ export class S3Service {
       // Add the required 'Body' parameter
       Body: file.buffer,
     };
-    this.eventsGateway.sendTest(2, 0, file.size);
+    if (sendStatus) this.eventsGateway.sendTest(2, 0, file.size);
     const uploadedUrl = await new Promise<string>((res, rej) => {
       const aa = this.s3.upload(uploadParams);
       aa.on('httpUploadProgress', ({ loaded, total }) => {
-        this.eventsGateway.sendTest(3, loaded, total);
+        if (sendStatus) this.eventsGateway.sendTest(3, loaded, total);
       });
       aa.send((err, data) => {
         if (err) rej();
         else res(data.Location);
       });
     });
-    this.eventsGateway.sendTest(4, file.size, file.size);
+    if (sendStatus) this.eventsGateway.sendTest(4, file.size, file.size);
     return await this.fileMapService.updateUrl(newFileMap, uploadedUrl);
   }
 }

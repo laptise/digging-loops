@@ -1,11 +1,12 @@
 import { FC, useState } from "react";
 import styles from "../styles/Components.module.scss";
 
-const Key: FC<{ keyName?: string; isSharp?: boolean; setPicked?: (val: string) => void }> = ({ keyName, isSharp, setPicked }) => {
+type KeyProps = { keyName?: string; isSharp?: boolean; setPicked?: (picked: { label: string; value: string }) => void; value?: string };
+const Key: FC<KeyProps> = ({ keyName, isSharp, setPicked, value }) => {
   return (
     <div
-      onMouseDown={() => setPicked?.(keyName || "")}
-      onTouchStart={() => setPicked?.(keyName || "")}
+      onMouseDown={() => setPicked?.({ label: keyName || "", value: value || keyName || "" })}
+      onTouchStart={() => setPicked?.({ label: keyName || "", value: value || keyName || "" })}
       className={styles.keySelectorKey}
       data-ghost-key={!keyName}
       data-is-sharp={isSharp}
@@ -15,31 +16,38 @@ const Key: FC<{ keyName?: string; isSharp?: boolean; setPicked?: (val: string) =
   );
 };
 
-export const KeySelector: FC<{}> = ({}) => {
+export const useKeySelector = () => {
   const [open, setOpen] = useState(false);
   const [picked, setPicked] = useState("");
-  return (
+  const [value, setValue] = useState<string>("");
+  const updatedPicked = ({ label, value }: { label: string; value: string }) => {
+    setPicked(label);
+    setValue(value);
+    setOpen(false);
+  };
+  const component = () => (
     <div id={styles.keySelectorWrapper}>
       <input readOnly value={picked} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)} />
       <div id={styles.keySelector} data-onview={open}>
         <div className={styles.keySelectorRow}>
-          <Key keyName="C#/Bb" isSharp={true} setPicked={setPicked} />
-          <Key keyName="D#/Eb" isSharp={true} setPicked={setPicked} />
+          <Key keyName="C#/Bb" value="C#" isSharp={true} setPicked={updatedPicked} />
+          <Key keyName="D#/Eb" value="D#" isSharp={true} setPicked={updatedPicked} />
           <Key />
-          <Key keyName="F#/Gb" isSharp={true} setPicked={setPicked} />
-          <Key keyName="G#/Ab" isSharp={true} setPicked={setPicked} />
-          <Key keyName="A#/Bb" isSharp={true} setPicked={setPicked} />
+          <Key keyName="F#/Gb" value="F#" isSharp={true} setPicked={updatedPicked} />
+          <Key keyName="G#/Ab" value="G#" isSharp={true} setPicked={updatedPicked} />
+          <Key keyName="A#/Bb" value="A#" isSharp={true} setPicked={updatedPicked} />
         </div>
         <div className={styles.keySelectorRow}>
-          <Key keyName="C" isSharp={false} setPicked={setPicked} />
-          <Key keyName="D" isSharp={false} setPicked={setPicked} />
-          <Key keyName="E" isSharp={false} setPicked={setPicked} />
-          <Key keyName="F" isSharp={false} setPicked={setPicked} />
-          <Key keyName="G" isSharp={false} setPicked={setPicked} />
-          <Key keyName="A" isSharp={false} setPicked={setPicked} />
-          <Key keyName="B" isSharp={false} setPicked={setPicked} />
+          <Key keyName="C" isSharp={false} setPicked={updatedPicked} />
+          <Key keyName="D" isSharp={false} setPicked={updatedPicked} />
+          <Key keyName="E" isSharp={false} setPicked={updatedPicked} />
+          <Key keyName="F" isSharp={false} setPicked={updatedPicked} />
+          <Key keyName="G" isSharp={false} setPicked={updatedPicked} />
+          <Key keyName="A" isSharp={false} setPicked={updatedPicked} />
+          <Key keyName="B" isSharp={false} setPicked={updatedPicked} />
         </div>
       </div>
     </div>
   );
+  return { KeySelector: component, value, picked };
 };
