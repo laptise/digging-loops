@@ -30,6 +30,7 @@ import { withAuth } from "../ssr/auth";
 import { AddNewTrackPayload } from "@dtos";
 import { buildForm } from "../utils/form-builder";
 import useImageUploader from "../hooks/use-image-uploader";
+import { EndPoints } from "../networks/url";
 function RowRadioButtonsGroup() {
   return (
     <FormControl>
@@ -96,7 +97,7 @@ const Upload: NextPage<{ auth: User | null }> = ({ auth }) => {
   const uploadable = keyChord && file && img && title;
   const upload = async () => {
     if (uploadable) {
-      const socket = io("http://localhost:13018");
+      const socket = io(EndPoints.getServerUrl());
       socket.on("connect", () => {
         setLoadedSize(0);
         setTotalSize(file.size);
