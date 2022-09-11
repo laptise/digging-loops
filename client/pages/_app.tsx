@@ -1,11 +1,11 @@
+import { ApolloProvider } from "@apollo/client";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import { deepPurple } from "@mui/material/colors";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import type { AppProps } from "next/app";
-import "@fortawesome/fontawesome-svg-core/styles.css";
-import "../styles/globals.scss";
-import { ApolloProvider } from "@apollo/client";
-import { getApolloClient } from "../networks/apollo";
 import { PlayerProvider } from "../hooks/use-player";
+import { getApolloClient } from "../networks/apollo";
+import "../styles/globals.scss";
 
 const theme = createTheme({
   palette: {

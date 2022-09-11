@@ -14,7 +14,7 @@ import Link from "next/link";
 import { FC, useRef, useState } from "react";
 import { UploadedItemsLayout } from "../components/layout/uploaded-items/uploaded-item-layout";
 import { RadiusInput } from "../components/radius-input";
-import { DlPlayer, usePlayerControl } from "../hooks/use-player";
+import { usePlayerControl } from "../hooks/use-player";
 import { getApolloClient } from "../networks/apollo";
 import { requireAuth } from "../ssr/auth";
 
@@ -47,18 +47,25 @@ const _appendBuffer = function (buffer1: ArrayBuffer, buffer2: ArrayBuffer) {
 
 const UploadedItem: FC<{ track: Track }> = ({ track }) => {
   const auRef = useRef<HTMLAudioElement | null>(null);
-  const { play } = usePlayerControl();
+  const { play, testPlay } = usePlayerControl();
   const [ctx, setCtx] = useState<AudioContext | null>(null);
   const playMusic = async () => {
     console.log(track);
-    play({
+    const info = {
       targetUrl: `http://${process.env.NEXT_PUBLIC_DOMAIN_NAME}:13018/track/stream/10/${track.fileMapId}/${track.file?.name}`,
       trackName: track.file?.name || "",
       bpm: 0,
-    });
+    };
+    // play(info);
+    testPlay(info);
   };
   return (
-    <TableRow key={track.id} onClick={() => playMusic()}>
+    <TableRow
+      key={track.id}
+      onClick={() => {
+        playMusic();
+      }}
+    >
       <audio preload="none" ref={auRef} src={track.file?.url || ""}></audio>
       <TableCell>{track.title}</TableCell>
       <TableCell>
@@ -80,7 +87,6 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
 const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) => {
   return (
     <UploadedItemsLayout auth={auth} value={0}>
-      <DlPlayer />
       <Paper style={{ padding: 20 }}>
         <Stack direction={"row"} alignItems="center" justifyContent={"space-between"} sx={{ width: "100%", height: 40, boxSizing: "border-box" }}>
           <RadiusInput placeholder="제목으로 트랙을 검색합니다." style={{ minWidth: 160 }} />

@@ -1,4 +1,4 @@
-import { createContext, FC, ReactNode, useContext, useEffect, useReducer, useState } from "react";
+import { createContext, FC, ReactNode, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { fromFetch } from "rxjs/fetch";
 
 type PlayInfo = {
@@ -7,9 +7,9 @@ type PlayInfo = {
   targetUrl: string;
 };
 
-type Action = { type: "PLAY"; playInfo: PlayInfo } | { type: "STOP" };
+type Action = { type: "PLAY"; playInfo: PlayInfo } | { type: "STOP" } | { type: "SET_PLAY_FN"; play: (playInfo: PlayInfo) => Promise<void> };
 
-type State = { playing: string | null; isViewing: boolean; playInfo: PlayInfo | null; ctx: AudioContext | null };
+type State = { playing: string | null; isViewing: boolean; playInfo: PlayInfo | null; ctx: AudioContext | null; play(playInfo: PlayInfo): void };
 
 type PlayerCtxType = { state: State; dispatch: React.Dispatch<Action> };
 
@@ -20,6 +20,7 @@ const initialState: State = {
   playing: null,
   playInfo: null,
   ctx: null,
+  play() {},
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -34,6 +35,11 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         isViewing: false,
+      };
+    case "SET_PLAY_FN":
+      return {
+        ...state,
+        play: action.play,
       };
     default:
       return state;
@@ -55,82 +61,88 @@ const _appendBuffer = function (buffer1: ArrayBuffer, buffer2: ArrayBuffer) {
 export const usePlayerControl = () => {
   const { state, dispatch } = useContext(PlayerContext);
   const play = (playInfo: PlayInfo) => dispatch({ type: "PLAY", playInfo });
-  return { play };
+  return { play, testPlay: state.play };
 };
 
-const PlayerUI = () => {
-  const { state, dispatch } = useContext(PlayerContext);
-  const { isViewing, playInfo, ctx } = state;
-  const { trackName } = playInfo as PlayInfo;
-};
+type PlayStatus = "playing" | "stopped" | "paused" | "loading";
 
 export const DlPlayer = () => {
   const { state, dispatch } = useContext(PlayerContext);
   const { isViewing, playInfo } = state;
-  const [ctx, setCtx] = useState<AudioContext | null>(null);
   const display = isViewing ? "flex" : "none";
-
-  const playProcess = async () => {
-    console.log("process");
-    if (playInfo) {
-      const { targetUrl } = playInfo;
-      console.log("playInfo");
-      const $data = fromFetch(targetUrl, {
-        selector(res) {
-          return res.arrayBuffer();
-        },
-      });
-      let buffer: ArrayBuffer = new ArrayBuffer(0);
-      $data.subscribe({
-        next: (result) => {
-          buffer = _appendBuffer(buffer, result);
-        },
-        complete: async () => {
-          if (ctx) {
-            console.log("ctx");
-            const src = ctx.createBufferSource();
-            src.buffer = await ctx.decodeAudioData(buffer);
-            src.connect(ctx.destination);
-            src.start();
-          }
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    const cleanCtx = async () => {
-      if (ctx) {
-        await ctx.close();
-        setCtx(null);
-      }
-      setCtx(new AudioContext());
-    };
-    cleanCtx();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playInfo]);
-
-  useEffect(() => {
-    if (ctx) playProcess();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ctx]);
+  const ctx = useRef<AudioContext>();
+  const buffer = useRef<ArrayBuffer>();
+  const audioBuffer = useRef<AudioBuffer>();
+  const [playStatus, setPlayStatus] = useState<PlayStatus>("loading");
 
   const pause = async () => {
-    ctx?.suspend();
+    ctx.current!.suspend();
+    setPlayStatus("paused");
   };
 
   const play = async () => {
-    ctx?.resume();
+    ctx.current!.resume();
+    setPlayStatus("playing");
   };
 
+  const stop = async () => {
+    await ctx.current!.close();
+    ctx.current = new AudioContext();
+    const src = ctx.current!.createBufferSource();
+    src.buffer = audioBuffer.current!;
+    src.connect(ctx.current!.destination);
+    src.start();
+    ctx.current!.suspend();
+    setPlayStatus("stopped");
+  };
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_PLAY_FN",
+      async play(playInfo: PlayInfo) {
+        setPlayStatus("loading");
+        dispatch({ type: "PLAY", playInfo });
+        if (ctx.current) {
+          await ctx.current!.suspend?.();
+          await ctx.current!.close?.();
+        }
+        ctx.current = new AudioContext();
+        if (playInfo) {
+          const { targetUrl } = playInfo;
+          const $data = fromFetch(targetUrl, {
+            selector(res) {
+              return res.arrayBuffer();
+            },
+          });
+          buffer.current = new ArrayBuffer(0);
+          $data.subscribe({
+            next: (result) => {
+              buffer.current = _appendBuffer(buffer.current!, result);
+            },
+            complete: async () => {
+              if (ctx) {
+                setPlayStatus("playing");
+                const src = ctx.current!.createBufferSource();
+                audioBuffer.current = await ctx.current!.decodeAudioData(buffer.current!);
+                src.buffer = audioBuffer.current!;
+                src.connect(ctx.current!.destination);
+                src.start();
+              }
+            },
+          });
+        }
+      },
+    });
+  }, []);
   return (
     <div
       id="react-use-player"
       style={{ display, bottom: 0, width: "100%", position: "fixed", backgroundColor: "white", left: 0, zIndex: 2000, padding: 10 }}
     >
-      <button onClick={play}>play</button>
-      <button>stop</button>
-      <button onClick={pause}>pause</button>
+      {playStatus === "loading" && <button>loading</button>}
+      {(playStatus === "playing" || playStatus === "paused" || playStatus === "stopped") && <button onClick={stop}>stop</button>}
+      {(playStatus === "stopped" || playStatus === "paused") && <button onClick={play}>play</button>}
+      {playStatus === "playing" && <button onClick={pause}>pause</button>}
       {playInfo?.trackName || ""}
     </div>
   );

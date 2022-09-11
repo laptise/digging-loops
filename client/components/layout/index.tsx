@@ -1,42 +1,19 @@
 import { User } from "@entities";
-import {
-  faAlbumCollection,
-  faBars,
-  faChevronLeft,
-  faCloudArrowUp,
-  faCloudCheck,
-  faIdCard,
-  faMagnifyingGlass,
-  faRightFromBracket,
-} from "@fortawesome/pro-solid-svg-icons";
+import { faBars, faChevronLeft, faCloudArrowUp, faCloudCheck, faMagnifyingGlass, faRightFromBracket } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Drawer,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Modal,
-  ModalProps,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, Divider, Drawer, ListItemAvatar, ListItemButton, ListItemIcon, Modal, ModalProps, Stack, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
 import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
+import { DlPlayer } from "../../hooks/use-player";
 import styles from "../../styles/Common.module.scss";
 import SearchPanel from "./search-panel";
-import { destroyCookie } from "nookies";
-import { useRouter } from "next/router";
 type LayoutProps = {
   children: ReactNode;
   pageTitle: string;
@@ -91,6 +68,7 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
       variant="persistent"
       style={{ width: drawerOpen ? width : 0, transition: "all 300ms", fontSize: 16 }}
     >
+      <DlPlayer />
       <Stack style={{ color: "white", alignItems: "center" }} spacing={1}>
         <Stack style={{ minHeight: 64 }} justifyContent="center">
           <Button onClick={() => setDrawerOpen(false)} style={{ width: 60, marginLeft: "auto", height: "100%" }}>
