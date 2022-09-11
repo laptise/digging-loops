@@ -62,58 +62,60 @@ const DrawerMenu: FC<{ drawerOpenState: [boolean, Dispatch<SetStateAction<boolea
     router.reload();
   };
   return (
-    <Drawer
-      open={drawerOpen}
-      PaperProps={{ style: { position: "fixed", top: 0, width, backgroundColor: "#5d408f" } }}
-      variant="persistent"
-      style={{ width: drawerOpen ? width : 0, transition: "all 300ms", fontSize: 16 }}
-    >
+    <>
       <DlPlayer />
-      <Stack style={{ color: "white", alignItems: "center" }} spacing={1}>
-        <Stack style={{ minHeight: 64 }} justifyContent="center">
-          <Button onClick={() => setDrawerOpen(false)} style={{ width: 60, marginLeft: "auto", height: "100%" }}>
-            <FontAwesomeIcon icon={faChevronLeft} size="lg" color="white" style={{ margin: "auto" }} />
-          </Button>
+      <Drawer
+        open={drawerOpen}
+        PaperProps={{ style: { position: "fixed", top: 0, width, backgroundColor: "#5d408f" } }}
+        variant="persistent"
+        style={{ width: drawerOpen ? width : 0, transition: "all 300ms", fontSize: 16 }}
+      >
+        <Stack style={{ color: "white", alignItems: "center" }} spacing={1}>
+          <Stack style={{ minHeight: 64 }} justifyContent="center">
+            <Button onClick={() => setDrawerOpen(false)} style={{ width: 60, marginLeft: "auto", height: "100%" }}>
+              <FontAwesomeIcon icon={faChevronLeft} size="lg" color="white" style={{ margin: "auto" }} />
+            </Button>
+          </Stack>
+          <Divider />
+          <Link passHref={true} href="/profile">
+            <ListItemButton component="a" href="#customized-list">
+              <Tooltip title="My profile" placement="right" enterDelay={50}>
+                <ListItemAvatar>
+                  <Avatar alt={auth?.name} style={{ margin: "auto" }} />
+                </ListItemAvatar>
+              </Tooltip>
+            </ListItemButton>
+          </Link>
+          <Divider />
+          <Link passHref={true} href="/library">
+            <ListItemButton component="a">
+              <Tooltip title="My uploads" placement="right" enterDelay={50}>
+                <ListItemIcon style={{ minWidth: 30 }}>
+                  <FontAwesomeIcon icon={faCloudCheck} color="white" size="lg" style={{ margin: "auto" }} />
+                </ListItemIcon>
+              </Tooltip>
+            </ListItemButton>
+          </Link>
+          <Link passHref={true} href="/upload">
+            <ListItemButton component="a">
+              <Tooltip title="Upload new file" placement="right" enterDelay={50}>
+                <ListItemIcon style={{ minWidth: 30 }}>
+                  <FontAwesomeIcon icon={faCloudArrowUp} color="white" size="lg" style={{ margin: "auto" }} />
+                </ListItemIcon>
+              </Tooltip>
+            </ListItemButton>
+          </Link>
+          <Divider />
+          <ListItemButton component="a" onClick={logout}>
+            <Tooltip title="Signout" placement="right" enterDelay={50}>
+              <ListItemIcon style={{ minWidth: 30 }}>
+                <FontAwesomeIcon icon={faRightFromBracket} color="white" size="lg" style={{ margin: "auto" }} />
+              </ListItemIcon>
+            </Tooltip>
+          </ListItemButton>
         </Stack>
-        <Divider />
-        <Link passHref={true} href="/profile">
-          <ListItemButton component="a" href="#customized-list">
-            <Tooltip title="My profile" placement="right" enterDelay={50}>
-              <ListItemAvatar>
-                <Avatar alt={auth?.name} style={{ margin: "auto" }} />
-              </ListItemAvatar>
-            </Tooltip>
-          </ListItemButton>
-        </Link>
-        <Divider />
-        <Link passHref={true} href="/library">
-          <ListItemButton component="a">
-            <Tooltip title="My uploads" placement="right" enterDelay={50}>
-              <ListItemIcon style={{ minWidth: 30 }}>
-                <FontAwesomeIcon icon={faCloudCheck} color="white" size="lg" style={{ margin: "auto" }} />
-              </ListItemIcon>
-            </Tooltip>
-          </ListItemButton>
-        </Link>
-        <Link passHref={true} href="/upload">
-          <ListItemButton component="a">
-            <Tooltip title="Upload new file" placement="right" enterDelay={50}>
-              <ListItemIcon style={{ minWidth: 30 }}>
-                <FontAwesomeIcon icon={faCloudArrowUp} color="white" size="lg" style={{ margin: "auto" }} />
-              </ListItemIcon>
-            </Tooltip>
-          </ListItemButton>
-        </Link>
-        <Divider />
-        <ListItemButton component="a" onClick={logout}>
-          <Tooltip title="Signout" placement="right" enterDelay={50}>
-            <ListItemIcon style={{ minWidth: 30 }}>
-              <FontAwesomeIcon icon={faRightFromBracket} color="white" size="lg" style={{ margin: "auto" }} />
-            </ListItemIcon>
-          </Tooltip>
-        </ListItemButton>
-      </Stack>
-    </Drawer>
+      </Drawer>
+    </>
   );
 };
 const SimpleDialog: FC<SimpleDialogProps> = ({ open, close }) => {

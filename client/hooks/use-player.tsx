@@ -139,7 +139,7 @@ export const DlPlayer = () => {
       id="react-use-player"
       style={{ display, bottom: 0, width: "100%", position: "fixed", backgroundColor: "white", left: 0, zIndex: 2000, padding: 10 }}
     >
-      {playStatus === "loading" && <button>loading</button>}
+      {playStatus !== "playing" && playStatus === "loading" && <button>loading</button>}
       {(playStatus === "playing" || playStatus === "paused" || playStatus === "stopped") && <button onClick={stop}>stop</button>}
       {(playStatus === "stopped" || playStatus === "paused") && <button onClick={play}>play</button>}
       {playStatus === "playing" && <button onClick={pause}>pause</button>}
