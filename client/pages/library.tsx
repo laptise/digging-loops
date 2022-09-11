@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
-import { User } from "@entities";
+import { Track, User } from "@entities";
 import { faCloudArrowUp } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Button, IconButton, Paper, Stack, Tab, Tabs, TextField, Typography, Link as MLink } from "@mui/material";
+import { Box, Button, Link as MLink, Paper, Stack, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,11 +11,12 @@ import TableRow from "@mui/material/TableRow";
 import { format } from "date-fns";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
-import { Layout } from "../components/layout";
+import { FC, useRef, useState } from "react";
 import { UploadedItemsLayout } from "../components/layout/uploaded-items/uploaded-item-layout";
 import { RadiusInput } from "../components/radius-input";
+import { DlPlayer, usePlayerControl } from "../hooks/use-player";
 import { getApolloClient } from "../networks/apollo";
-import { requireAuth, withAuth } from "../ssr/auth";
+import { requireAuth } from "../ssr/auth";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,16 +38,49 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+const _appendBuffer = function (buffer1: ArrayBuffer, buffer2: ArrayBuffer) {
+  const tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+  tmp.set(new Uint8Array(buffer1), 0);
+  tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+  return tmp.buffer;
+};
+
+const UploadedItem: FC<{ track: Track }> = ({ track }) => {
+  const auRef = useRef<HTMLAudioElement | null>(null);
+  const { play } = usePlayerControl();
+  const [ctx, setCtx] = useState<AudioContext | null>(null);
+  const playMusic = async () => {
+    console.log(track);
+    play({
+      targetUrl: `http://${process.env.NEXT_PUBLIC_DOMAIN_NAME}:13018/track/stream/10/${track.fileMapId}/${track.file?.name}`,
+      trackName: track.file?.name || "",
+      bpm: 0,
+    });
   };
-}
+  return (
+    <TableRow key={track.id} onClick={() => playMusic()}>
+      <audio preload="none" ref={auRef} src={track.file?.url || ""}></audio>
+      <TableCell>{track.title}</TableCell>
+      <TableCell>
+        <MLink download={track.file?.name} href={track.file?.url}>
+          {track.file?.name}
+        </MLink>
+      </TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell>{track.keyChord}</TableCell>
+      <TableCell>{format(new Date(track?.file?.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell>
+      <TableCell></TableCell>
+    </TableRow>
+  );
+};
 
 const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) => {
   return (
     <UploadedItemsLayout auth={auth} value={0}>
+      <DlPlayer />
       <Paper style={{ padding: 20 }}>
         <Stack direction={"row"} alignItems="center" justifyContent={"space-between"} sx={{ width: "100%", height: 40, boxSizing: "border-box" }}>
           <RadiusInput placeholder="제목으로 트랙을 검색합니다." style={{ minWidth: 160 }} />
@@ -72,21 +106,7 @@ const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) =>
           </TableHead>
           <TableBody>
             {view?.uploadedTracks?.map((x) => (
-              <TableRow key={x.id}>
-                <TableCell>{x.title}</TableCell>
-                <TableCell>
-                  <MLink download={x.file?.name} href={x.file?.url}>
-                    {x.file?.name}
-                  </MLink>
-                </TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell>{x.keyChord}</TableCell>
-                <TableCell>{format(new Date(x?.file?.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
+              <UploadedItem key={x.id} track={x} />
             ))}
           </TableBody>
         </Table>
