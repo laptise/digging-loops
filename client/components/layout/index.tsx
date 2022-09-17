@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
 import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
-import { DlPlayer } from "../../hooks/use-player";
+import { DlPlayer } from "../../hooks/use-dl-player";
 import styles from "../../styles/Common.module.scss";
 import SearchPanel from "./search-panel";
 type LayoutProps = {

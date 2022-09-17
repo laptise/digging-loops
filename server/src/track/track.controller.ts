@@ -25,6 +25,7 @@ import { NewTrackInput } from './dto/index.input';
 import { TrackService } from './track.service';
 import type { Response } from 'express';
 import { GetObjectRequest } from 'aws-sdk/clients/s3';
+import { Readable, Transform } from 'stream';
 
 @Controller('track')
 export class TrackController {
@@ -74,6 +75,7 @@ export class TrackController {
     // const url = await this.s3Service.upload(filePath, type);
     return 'a';
   }
+
   @Get('stream/:fileType/:fileMapId/:fileName')
   async sampleStream(
     @Res() response: Response,

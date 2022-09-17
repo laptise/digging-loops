@@ -14,7 +14,7 @@ import Link from "next/link";
 import { FC, useRef, useState } from "react";
 import { UploadedItemsLayout } from "../components/layout/uploaded-items/uploaded-item-layout";
 import { RadiusInput } from "../components/radius-input";
-import { usePlayerControl } from "../hooks/use-player";
+import { usePlayerControl } from "../hooks/use-dl-player";
 import { getApolloClient } from "../networks/apollo";
 import { requireAuth } from "../ssr/auth";
 
@@ -56,7 +56,6 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
       trackName: track.file?.name || "",
       bpm: 0,
     };
-    // play(info);
     testPlay(info);
   };
   return (
