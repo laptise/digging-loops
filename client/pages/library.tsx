@@ -65,7 +65,6 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
         playMusic();
       }}
     >
-      <audio preload="none" ref={auRef} src={track.file?.url || ""}></audio>
       <TableCell>{track.title}</TableCell>
       <TableCell>
         <MLink download={track.file?.name} href={track.file?.url}>
