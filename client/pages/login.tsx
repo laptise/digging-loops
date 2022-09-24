@@ -1,6 +1,6 @@
 import { Button, Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { clientAxios } from "../networks/axios";
 import { Layout } from "../components/layout";
 import styles from "../styles/Login.module.scss";
@@ -25,8 +25,9 @@ const Login = () => {
     };
     setIsSafe(validateIsSafe);
   }, [email, password]);
-  const submit = async () => {
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     try {
+      e.preventDefault();
       const hashPass = crypto.createHash("sha256").update(password, "utf8").digest("hex");
       const { data } = await clientAxios.post("auth/login", { email, password: hashPass });
       setCookie(null, "access_token", data.access_token, {
@@ -48,20 +49,22 @@ const Login = () => {
         }}
         msg={"일치하는 로그인정보가 없습니다."}
       />
-      <Paper id={styles.paper}>
-        <Typography variant="h4" color={"primary"}>
-          로그인
-        </Typography>
-        <TextField id="email" value={email} onChange={(e) => setEmail(e.target.value)} type={"email"} label="이메일 주소" variant="standard" />
-        <TextField id="password" value={password} onChange={(e) => setPassword(e.target.value)} type={"password"} label="암호" variant="standard" />
-        <Button disabled={!isSafe} onClick={() => submit()} variant="contained">
-          로그인
-        </Button>
-        <Divider />
-        <Link passHref={true} href="/signup">
-          <Button variant="contained">회원가입</Button>
-        </Link>
-      </Paper>
+      <form onSubmit={(e) => submit(e)}>
+        <Paper id={styles.paper}>
+          <Typography variant="h4" color={"primary"}>
+            로그인
+          </Typography>
+          <TextField id="email" value={email} onChange={(e) => setEmail(e.target.value)} type={"email"} label="이메일 주소" variant="standard" />
+          <TextField id="password" value={password} onChange={(e) => setPassword(e.target.value)} type={"password"} label="암호" variant="standard" />
+          <Button disabled={!isSafe} variant="contained" type="submit">
+            로그인
+          </Button>
+          <Divider />
+          <Link passHref={true} href="/signup">
+            <Button variant="contained">회원가입</Button>
+          </Link>
+        </Paper>
+      </form>
     </Layout>
   );
 };

@@ -12,11 +12,11 @@ import { format } from "date-fns";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { FC, useRef, useState } from "react";
-import { UploadedItemsLayout } from "../components/layout/uploaded-items/uploaded-item-layout";
-import { RadiusInput } from "../components/radius-input";
-import { usePlayerControl } from "../hooks/use-dl-player";
-import { getApolloClient } from "../networks/apollo";
-import { requireAuth } from "../ssr/auth";
+import { UploadedItemsLayout } from "../../components/layout/uploaded-items/uploaded-item-layout";
+import { RadiusInput } from "../../components/radius-input";
+import { usePlayerControl } from "../../hooks/use-dl-player";
+import { getApolloClient } from "../../networks/apollo";
+import { requireAuth } from "../../ssr/auth";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -59,26 +59,31 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
     testPlay(info);
   };
   return (
-    <TableRow
-      key={track.id}
-      onClick={() => {
-        playMusic();
-      }}
-    >
-      <TableCell>{track.title}</TableCell>
-      <TableCell>
-        <MLink download={track.file?.name} href={track.file?.url}>
-          {track.file?.name}
-        </MLink>
-      </TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell>{track.keyChord}</TableCell>
-      <TableCell>{format(new Date(track?.file?.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell>
-      <TableCell></TableCell>
-    </TableRow>
+    <Link href={`library/${track.fileMapId}`}>
+      <TableRow
+        key={track.id}
+        sx={{
+          transition: "all 50ms",
+          cursor: "pointer",
+          ":hover": { backgroundColor: "rgba(0,0,0,0.1)" },
+          ":active": { backgroundColor: "rgba(0,0,0,0.05)" },
+        }}
+      >
+        <TableCell>{track.title}</TableCell>
+        <TableCell>
+          <MLink download={track.file?.name} href={track.file?.url}>
+            {track.file?.name}
+          </MLink>
+        </TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell>{track.keyChord}</TableCell>
+        <TableCell>{format(new Date(track?.file?.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell>
+        <TableCell></TableCell>
+      </TableRow>
+    </Link>
   );
 };
 
