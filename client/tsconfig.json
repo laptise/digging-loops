@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -16,7 +17,11 @@
     "incremental": true,
     "paths": {
       "@entities": ["../types/entities.d.ts"],
-      "@dtos": ["../types/dtos.d.ts"]
+      "@dtos": ["../types/dtos.d.ts"],
+      "@components/*": ["./components/*"],
+      "@auth": ["./ssr/auth"],
+      "@networks/*": ["./networks/*"],
+      "@hooks/*": ["./hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./node_modules/wicg-file-system-access/index.d.ts"],

@@ -33,13 +33,13 @@ export const UploadedItemsLayout: FC<UploadedItemsLayoutProps> = ({ value, child
 export const LayoutTabs: FC<{ value: number }> = ({ value }) => {
   return (
     <Tabs value={value} aria-label="basic tabs example">
-      <Link href="/" passHref={true}>
+      <Link href="/library/samples" passHref={true}>
         <Tab label="SAMPLES" {...a11yProps(0, value)} />
       </Link>
-      <Link href="/samples" passHref={true}>
+      <Link href="/library/packs" passHref={true}>
         <Tab label="PACKS" {...a11yProps(1, value)} />
       </Link>
-      <Link href="/presets" passHref={true}>
+      <Link href="/library/midis" passHref={true}>
         <Tab label="MIDI" {...a11yProps(2, value)} />
       </Link>
     </Tabs>
