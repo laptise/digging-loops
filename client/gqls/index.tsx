@@ -1,4 +1,4 @@
-import { DocumentNode, gql } from "@apollo/client";
+import { DocumentNode, gql, useQuery } from "@apollo/client";
 import { SearchTrackPayload } from "@dtos";
 import { Track } from "@entities";
 import { getApolloClient } from "@networks/apollo";
@@ -72,7 +72,22 @@ const queries = {
       }
     }
   `,
-};
+  searchTag: gql`
+    query searchTag($name: String!) {
+      searchTag(name: $name) {
+        id
+        name
+      }
+    }
+  `,
+} as const;
+
+function makeHook<R extends any, V extends {}, K extends keyof typeof queries>(nodeKey: K) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return (variables: V) => useQuery<{ [key in K]: R }, V>(queries[nodeKey], { variables });
+}
+
+export const useGetTrackById = makeHook<Track, { id: number }, "getTrackById">("getTrackById");
 
 export class QueryPublisher {
   constructor(private ctx: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) {}

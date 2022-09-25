@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForceUpdate } from "@hooks/use-force-update";
 import { useTextEditorModal } from "@hooks/edit-modals/use-text-editor-modal";
 import { Box, IconButton, Paper, Stack, Table, TableCell, TableRow, Typography } from "@mui/material";
-import { QueryPublisher } from "gqls";
+import { QueryPublisher, useGetTrackById } from "gqls";
 import { mixinComponent } from "lib/mixin-component";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
@@ -25,6 +25,8 @@ const Header = mixinComponent(Cell, { component: "th", variant: "head", style: {
 
 const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
   const forceUpdate = useForceUpdate();
+  const { data } = useGetTrackById({ id: track.id });
+  console.log(data);
   const [TrackNameEditModal, trackNameEditOpen, isTrackNameUpdated] = useTextEditorModal({
     question: "트랙명 입력",
     placeholder: track.title,

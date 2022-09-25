@@ -41,12 +41,18 @@ type Track {
   thumbnail: FileMap!
 }
 
+type Tag {
+  id: Float!
+  name: String!
+}
+
 type Query {
   sayHello: String!
   searchTracks(condition: TrackSearchInput!): [Track!]!
   getTrackById(id: Float!): Track!
   getUser(id: String!): User!
   getProfile: User!
+  searchTag(name: String!): [Tag!]!
 }
 
 input TrackSearchInput {

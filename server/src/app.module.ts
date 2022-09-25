@@ -23,6 +23,8 @@ import { UserModule } from './user/user.module';
 import { FileMapModule } from './file-map/file-map.module';
 import { FileMap } from './file-map/file-map';
 import { EventsModule } from './events/events.module';
+import { TagModule } from './tag/tag.module';
+import { Tag } from './tag/tag';
 
 @Module({
   imports: [
@@ -52,6 +54,7 @@ import { EventsModule } from './events/events.module';
         TrackSoundMap,
         TrackTagMap,
         FileMap,
+        Tag,
       ],
       synchronize: false,
     }),
@@ -63,6 +66,7 @@ import { EventsModule } from './events/events.module';
     FeelingMstModule,
     FileMapModule,
     EventsModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
