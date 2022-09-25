@@ -34,6 +34,9 @@ type Track {
   purchasedCount: Float!
   thumbnailFileMapId: Float!
   keyChord: String
+  bars: Float
+  duration: Float
+  bpm: Float
   file: FileMap!
   thumbnail: FileMap!
 }

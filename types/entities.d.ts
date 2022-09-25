@@ -8,6 +8,9 @@ export type Track = {
   purchasedCount: number;
   thumbnailFileMapId: number;
   keyChord: string;
+  duration: number;
+  bars: number;
+  bpm: number;
   file?: FileMap;
   thumbnail?: FileMap;
 };

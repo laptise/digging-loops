@@ -32,4 +32,13 @@ export class Track extends BaseEntity implements IF {
   @Column({ type: 'varchar' })
   @Field(() => String, { nullable: true })
   keyChord: string;
+  @Column({ type: 'int' })
+  @Field(() => Number, { nullable: true })
+  bars: number;
+  @Column({ type: 'int' })
+  @Field(() => Number, { nullable: true })
+  duration: number;
+  @Column({ type: 'int' })
+  @Field(() => Number, { nullable: true })
+  bpm: number;
 }

@@ -20,31 +20,53 @@ const queries = {
       }
     }
   `,
+  getProfile: gql`
+    query {
+      getProfile {
+        email
+        uploadedTracks {
+          id
+          title
+          keyChord
+          fileMapId
+          duration
+          bars
+          bpm
+          file {
+            url
+            createdAt
+            name
+          }
+          thumbnail {
+            url
+            createdAt
+          }
+        }
+      }
+    }
+  `,
 };
-
-function getQuery(nodeKey: keyof typeof queries) {
-  return queries[nodeKey];
-}
-
-type Query<R, N extends string, P extends {}> = {
-  name: N;
-  resType?: R;
-} & P;
-
-type QueryType = Query<Track, "getTrackById", { id: number }>;
 
 export class QueryPublisher {
   constructor(private ctx: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) {}
 
-  private async query<T>(key: QueryType) {
-    const { name: queryName, ...variables } = key;
-    const node = getQuery(queryName) as DocumentNode;
+  private getQuery(nodeKey: keyof typeof queries) {
+    return queries[nodeKey];
+  }
+
+  private async query<T>(name: keyof typeof queries, params?: object) {
+    const query = this.getQuery(name);
+    const variables = params;
     const cl = getApolloClient(this.ctx);
-    const raw = await cl.query({ query: node, variables });
-    return (raw.data?.[queryName] as T) || null;
+    const raw = await cl.query({ query, variables });
+    return (raw.data?.[name] as T) || null;
   }
 
   public async getTrackById(id: number) {
-    return await this.query<Track[]>({ name: "getTrackById", id });
+    return await this.query<Track>("getTrackById", { id });
+  }
+
+  public async getProfile() {
+    return await this.query<Track[]>("getProfile");
   }
 }

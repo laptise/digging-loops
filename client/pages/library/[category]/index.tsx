@@ -1,7 +1,10 @@
-import { gql } from "@apollo/client";
+import { requireAuth } from "@auth";
+import { UploadedItemsLayout } from "@components/layout/uploaded-items/uploaded-item-layout";
+import { RadiusInput } from "@components/radius-input";
 import { Track, User } from "@entities";
 import { faCloudArrowUp } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { usePlayerControl } from "@hooks/use-dl-player";
 import { Box, Button, Link as MLink, Paper, Stack, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,14 +12,11 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { format } from "date-fns";
+import { QueryPublisher } from "gqls";
 import { GetServerSideProps, NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FC, useRef, useState } from "react";
-import { UploadedItemsLayout } from "@components/layout/uploaded-items/uploaded-item-layout";
-import { RadiusInput } from "@components/radius-input";
-import { usePlayerControl } from "@hooks/use-dl-player";
-import { getApolloClient } from "@networks/apollo";
-import { requireAuth } from "@auth";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -49,6 +49,7 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
   const auRef = useRef<HTMLAudioElement | null>(null);
   const { play, testPlay } = usePlayerControl();
   const [ctx, setCtx] = useState<AudioContext | null>(null);
+  const imgSize = 30;
   const playMusic = async () => {
     console.log(track);
     const info = {
@@ -69,6 +70,11 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
           ":active": { backgroundColor: "rgba(0,0,0,0.05)" },
         }}
       >
+        <TableCell>
+          <Box style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Image alt={track.title} src={track.thumbnail?.url || ""} width={imgSize} height={imgSize} />
+          </Box>
+        </TableCell>
         <TableCell>{track.title}</TableCell>
         <TableCell>
           <MLink download={track.file?.name} href={track.file?.url}>
@@ -76,9 +82,9 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
           </MLink>
         </TableCell>
         <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
+        <TableCell>{track.duration}</TableCell>
+        <TableCell>{track.bars}</TableCell>
+        <TableCell>{track.bpm}</TableCell>
         <TableCell>{track.keyChord}</TableCell>
         <TableCell>{format(new Date(track?.file?.createdAt as any), "yyyy-MM-dd hh:mm:ss")}</TableCell>
         <TableCell></TableCell>
@@ -102,6 +108,7 @@ const Library: NextPage<{ auth: User | null; view: User; category: string }> = (
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell style={{ minWidth: 38 }}>썸네일</TableCell>
               <TableCell>제목</TableCell>
               <TableCell>파일명</TableCell>
               <TableCell>태그</TableCell>
@@ -128,31 +135,6 @@ export default Library;
 export const getServerSideProps: GetServerSideProps = (ctx) =>
   requireAuth(ctx, async ({ params }) => {
     const category = params?.["category"]!;
-
-    const query = gql`
-      query {
-        getProfile {
-          email
-          uploadedTracks {
-            id
-            title
-            keyChord
-            fileMapId
-            file {
-              url
-              createdAt
-              name
-            }
-            thumbnail {
-              url
-              createdAt
-            }
-          }
-        }
-      }
-    `;
-    const view = await getApolloClient(ctx)
-      .query({ query })
-      .then((x) => x.data?.getProfile || null);
+    const view = await new QueryPublisher(ctx).getProfile();
     return { props: { view, category } };
   });
