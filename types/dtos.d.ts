@@ -4,3 +4,8 @@ export type AddNewTrackPayload = {
   keyChord: string;
   thumbnailName: string;
 };
+
+export type SearchTrackPayload = {
+  ownerId?: string;
+  type: number;
+};

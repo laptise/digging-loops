@@ -5,13 +5,14 @@ import { Track, User } from "@entities";
 import { faPen } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForceUpdate } from "@hooks/use-force-update";
-import { useTextEditorModal } from "@hooks/use-text-editor-modal";
+import { useTextEditorModal } from "@hooks/edit-modals/use-text-editor-modal";
 import { Box, IconButton, Paper, Stack, Table, TableCell, TableRow, Typography } from "@mui/material";
 import { QueryPublisher } from "gqls";
 import { mixinComponent } from "lib/mixin-component";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { FC } from "react";
+import { useTagEditorModal } from "@hooks/edit-modals/use-tag-editor-modal";
 
 type MyTrackInfoType = {
   auth: User;
@@ -32,10 +33,17 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
       forceUpdate();
     },
   });
+
+  const [TagEditModal, tagEditOpen, isTagEdited] = useTagEditorModal({
+    afterSubmit(value) {
+      console.log(value);
+    },
+  });
   return (
     <UploadedItemsLayout auth={auth} category={category} pageTitle={track?.title}>
       <Paper>
         <TrackNameEditModal />
+        <TagEditModal />
         <TrackInfoLayout track={track} value={1}>
           <Stack direction="row">
             <Stack sx={{ p: 3 }} spacing={1}>
@@ -44,11 +52,7 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
                   <Header>제목</Header>
                   <Cell style={{ color: isTrackNameUpdated ? "red" : undefined }}>{track.title}</Cell>
                   <Cell>
-                    <IconButton
-                      onClick={() => {
-                        trackNameEditOpen();
-                      }}
-                    >
+                    <IconButton onClick={() => trackNameEditOpen()}>
                       <FontAwesomeIcon fontSize={14} icon={faPen} />
                     </IconButton>
                   </Cell>
@@ -56,6 +60,14 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
                     <Image alt={track?.thumbnail?.name} src={track?.thumbnail?.url || ""} width={200} height={200} />
                     <Typography>아트웍</Typography>
                   </Header>
+                </TableRow>
+                <TableRow>
+                  <Header>Tags</Header>
+                  <Cell>
+                    <IconButton onClick={() => tagEditOpen()}>
+                      <FontAwesomeIcon fontSize={14} icon={faPen} />
+                    </IconButton>
+                  </Cell>
                 </TableRow>
                 <TableRow>
                   <Header>키</Header>

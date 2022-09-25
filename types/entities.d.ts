@@ -13,6 +13,7 @@ export type Track = {
   bpm: number;
   file?: FileMap;
   thumbnail?: FileMap;
+  tags?: Tag[];
 };
 
 export type FileMap = {
@@ -68,4 +69,10 @@ export type Dictionary = {
   kor: string;
   eng: string;
   jpn: string;
+};
+
+export type Pack = {
+  id: number;
+  ownerId: string;
+  title: string;
 };

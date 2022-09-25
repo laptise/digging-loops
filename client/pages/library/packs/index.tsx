@@ -24,27 +24,6 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-const _appendBuffer = function (buffer1: ArrayBuffer, buffer2: ArrayBuffer) {
-  const tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
-  tmp.set(new Uint8Array(buffer1), 0);
-  tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
-  return tmp.buffer;
-};
-
 const UploadedItem: FC<{ track: Track }> = ({ track }) => {
   const auRef = useRef<HTMLAudioElement | null>(null);
   const { play, testPlay } = usePlayerControl();
@@ -93,9 +72,9 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
   );
 };
 
-const Library: NextPage<{ auth: User | null; tracks: Track[]; category: string }> = ({ auth, tracks, category }) => {
+const Library: NextPage<{ auth: User | null; tracks: Track[] }> = ({ auth, tracks }) => {
   return (
-    <UploadedItemsLayout auth={auth} category={category} pageTitle={"라이브러리"}>
+    <UploadedItemsLayout auth={auth} category={"packs"} pageTitle={"라이브러리"}>
       <Paper style={{ padding: 20 }}>
         <Stack direction={"row"} alignItems="center" justifyContent={"space-between"} sx={{ width: "100%", height: 40, boxSizing: "border-box" }}>
           <RadiusInput placeholder="제목으로 트랙을 검색합니다." style={{ minWidth: 160 }} />
@@ -110,12 +89,8 @@ const Library: NextPage<{ auth: User | null; tracks: Track[]; category: string }
             <TableRow>
               <TableCell style={{ minWidth: 38 }}>썸네일</TableCell>
               <TableCell>제목</TableCell>
-              <TableCell>파일명</TableCell>
+              <TableCell>파일수</TableCell>
               <TableCell>태그</TableCell>
-              <TableCell>길이</TableCell>
-              <TableCell>마디</TableCell>
-              <TableCell>템포</TableCell>
-              <TableCell>키</TableCell>
               <TableCell>등록일</TableCell>
               <TableCell>다운로드 횟수</TableCell>
             </TableRow>
@@ -134,17 +109,6 @@ const Library: NextPage<{ auth: User | null; tracks: Track[]; category: string }
 export default Library;
 export const getServerSideProps: GetServerSideProps = (ctx) =>
   requireAuth(ctx, async ({ params, auth }) => {
-    const category = params?.["category"]!;
-    const type = (() => {
-      switch (category) {
-        case "samples":
-          return 10;
-        case "packs":
-          return 20;
-        default:
-          return 99;
-      }
-    })();
-    const tracks = await new QueryPublisher(ctx).searchTracks({ type, ownerId: auth.email });
-    return { props: { tracks, category } };
+    const tracks = await new QueryPublisher(ctx).searchTracks({ type: 99, ownerId: auth.email });
+    return { props: { tracks } };
   });

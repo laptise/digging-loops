@@ -43,7 +43,13 @@ type Track {
 
 type Query {
   sayHello: String!
+  searchTracks(condition: TrackSearchInput!): [Track!]!
   getTrackById(id: Float!): Track!
   getUser(id: String!): User!
   getProfile: User!
+}
+
+input TrackSearchInput {
+  ownerId: String!
+  type: Float!
 }

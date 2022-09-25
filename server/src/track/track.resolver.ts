@@ -3,6 +3,7 @@ import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { FileCategory } from 'src/constants';
 import { FileMap } from 'src/file-map/file-map';
 import { FileMapService } from 'src/file-map/file-map.service';
+import { TrackSearchInput } from './dto/search.input';
 import { Track } from './track';
 import { TrackService } from './track.service';
 
@@ -32,6 +33,12 @@ export class TrackResolver {
       track.thumbnailFileMapId,
       FileCategory.Thumbnail,
     );
+  }
+
+  @Query(() => [Track])
+  async searchTracks(@Args('condition') condition: TrackSearchInput) {
+    const { ownerId, type } = condition;
+    return await this.trackService.getByOwnerAndCategories(ownerId, type);
   }
 
   @Query(() => Track)

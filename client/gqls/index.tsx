@@ -1,4 +1,5 @@
 import { DocumentNode, gql } from "@apollo/client";
+import { SearchTrackPayload } from "@dtos";
 import { Track } from "@entities";
 import { getApolloClient } from "@networks/apollo";
 import { GetServerSidePropsContext, PreviewData } from "next";
@@ -49,6 +50,28 @@ const queries = {
       }
     }
   `,
+  searchTracks: gql`
+    query searchTracks($condition: TrackSearchInput!) {
+      searchTracks(condition: $condition) {
+        duration
+        title
+        bars
+        id
+        playedCount
+        purchasedCount
+        keyChord
+        bpm
+        file {
+          createdAt
+          url
+          name
+        }
+        thumbnail {
+          url
+        }
+      }
+    }
+  `,
 };
 
 export class QueryPublisher {
@@ -72,5 +95,9 @@ export class QueryPublisher {
 
   public async getProfile() {
     return await this.query<Track[]>("getProfile");
+  }
+
+  public async searchTracks(condition: SearchTrackPayload) {
+    return await this.query<Track[]>("searchTracks", { condition });
   }
 }

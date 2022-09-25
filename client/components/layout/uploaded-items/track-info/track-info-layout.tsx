@@ -11,7 +11,7 @@ type TrackInfoLayoutProps = {
 
 export const TrackInfoLayout: FC<TrackInfoLayoutProps> = ({ value, track, children }) => {
   return (
-    <Stack direction="row" style={{ height: 300 }}>
+    <Stack direction="row" style={{ minHeight: 300 }}>
       <Stack sx={{ backgroundColor: "rgba(0,0,0,0.05)" }}>
         <ButtonGroup disableElevation={true} orientation="vertical" aria-label="vertical outlined button group" sx={{ width: 160 }}>
           <SingleButton href={`/library/samples/${track.id}`} picked={value === 1} label={"곡 정보"} />
