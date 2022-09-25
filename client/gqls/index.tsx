@@ -1,6 +1,6 @@
 import { DocumentNode, gql, useQuery } from "@apollo/client";
 import { SearchTrackPayload } from "@dtos";
-import { Track } from "@entities";
+import { Tag, Track } from "@entities";
 import { getApolloClient } from "@networks/apollo";
 import { GetServerSidePropsContext, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -88,6 +88,7 @@ function makeHook<R extends any, V extends {}, K extends keyof typeof queries>(n
 }
 
 export const useGetTrackById = makeHook<Track, { id: number }, "getTrackById">("getTrackById");
+export const useSearchTag = makeHook<Tag[], { name: string }, "searchTag">("searchTag");
 
 export class QueryPublisher {
   constructor(private ctx: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) {}

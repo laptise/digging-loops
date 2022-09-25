@@ -1,4 +1,5 @@
-import { Button, Dialog, DialogTitle, Stack, TextField } from "@mui/material";
+import { Autocomplete, Button, Dialog, DialogTitle, Stack, TextField } from "@mui/material";
+import { useSearchTag } from "gqls";
 import { FC, useState } from "react";
 
 type UseTagEditModalProps = {
@@ -7,12 +8,17 @@ type UseTagEditModalProps = {
 
 const ModalBody: FC<{ open: boolean; close: () => void } & UseTagEditModalProps> = ({ open, afterSubmit, close }) => {
   const [input, setInput] = useState<string>("");
-
+  const { data, loading } = useSearchTag({ name: input });
+  const arr = data?.searchTag || [];
   return (
     <Dialog open={open}>
       <DialogTitle style={{ paddingBottom: 0 }}>{"태그선택"}</DialogTitle>
       <Stack sx={{ p: 2 }}>
-        <TextField variant="outlined" onChange={(e) => setInput(e.target.value)} value={input} />
+        <Autocomplete
+          options={arr.map((x) => ({ label: x.name, id: x.id }))}
+          renderInput={(params) => <TextField onChange={(e) => setInput(e.target.value)} {...params} label="Movie" />}
+        />
+        {/* <TextField variant="outlined" onChange={(e) => setInput(e.target.value)} value={input} /> */}
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
           <Button variant="contained" onClick={() => close()}>
             취소
