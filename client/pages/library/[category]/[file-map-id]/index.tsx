@@ -3,10 +3,11 @@ import { HorizontalHeaderItem } from "@components/horizontal-header-item";
 import { TrackInfoLayout } from "@components/layout/uploaded-items/track-info/track-info-layout";
 import { UploadedItemsLayout } from "@components/layout/uploaded-items/uploaded-item-layout";
 import { Track, User } from "@entities";
-import { Paper, Stack, Tab, Tabs } from "@mui/material";
+import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { QueryPublisher } from "gqls";
 import { GetServerSideProps } from "next";
 import { FC } from "react";
+import Image from "next/image";
 
 type MyTrackInfoType = {
   auth: User;
@@ -19,9 +20,14 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
     <UploadedItemsLayout auth={auth} category={category} pageTitle={track?.title}>
       <Paper>
         <TrackInfoLayout track={track} value={1}>
-          <Stack sx={{ p: 3 }} spacing={1}>
-            <HorizontalHeaderItem label={"제목"} body={track.title}></HorizontalHeaderItem>
-            <HorizontalHeaderItem label={"키 "} body={track.keyChord}></HorizontalHeaderItem>
+          <Stack direction="row">
+            <Stack sx={{ p: 3 }} spacing={1}>
+              <HorizontalHeaderItem label={"제목"} body={track.title}></HorizontalHeaderItem>
+              <HorizontalHeaderItem label={"키 "} body={track.keyChord}></HorizontalHeaderItem>
+            </Stack>
+            <Box style={{ width: 200, height: 200 }}>
+              <Image alt={track?.thumbnail?.name} src={track?.thumbnail?.url || ""} width={200} height={200} />
+            </Box>
           </Stack>
         </TrackInfoLayout>
       </Paper>
