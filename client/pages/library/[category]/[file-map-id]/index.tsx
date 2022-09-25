@@ -6,7 +6,7 @@ import { faPen } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForceUpdate } from "@hooks/use-force-update";
 import { useTextEditorModal } from "@hooks/edit-modals/use-text-editor-modal";
-import { Box, IconButton, Paper, Stack, Table, TableCell, TableRow, Typography } from "@mui/material";
+import { Box, Chip, IconButton, Paper, Stack, Table, TableCell, TableRow, Typography } from "@mui/material";
 import { QueryPublisher, useGetTrackById } from "gqls";
 import { mixinComponent } from "lib/mixin-component";
 import { GetServerSideProps } from "next";
@@ -25,8 +25,6 @@ const Header = mixinComponent(Cell, { component: "th", variant: "head", style: {
 
 const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
   const forceUpdate = useForceUpdate();
-  const { data } = useGetTrackById({ id: track.id });
-  console.log(data);
   const [TrackNameEditModal, trackNameEditOpen, isTrackNameUpdated] = useTextEditorModal({
     question: "트랙명 입력",
     placeholder: track.title,
@@ -38,7 +36,8 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
 
   const [TagEditModal, tagEditOpen, isTagEdited] = useTagEditorModal({
     afterSubmit(value) {
-      console.log(value);
+      track.tags = value;
+      forceUpdate();
     },
   });
   return (
@@ -65,6 +64,11 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
                 </TableRow>
                 <TableRow>
                   <Header>Tags</Header>
+                  <Cell>
+                    {track.tags?.map((x) => (
+                      <Chip key={x.id} label={x.name} />
+                    ))}
+                  </Cell>
                   <Cell>
                     <IconButton onClick={() => tagEditOpen()}>
                       <FontAwesomeIcon fontSize={14} icon={faPen} />
