@@ -11,6 +11,10 @@ const queries = {
         id
         title
         keyChord
+        fileMapId
+        duration
+        bars
+        bpm
         file {
           name
         }

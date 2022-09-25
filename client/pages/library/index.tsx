@@ -6,7 +6,7 @@ const Jump = () => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   return {
-    redirect: { destination: "/library/sample/", permanent: true },
+    redirect: { destination: "/library/samples", permanent: true },
   };
 };
 export default Jump;
