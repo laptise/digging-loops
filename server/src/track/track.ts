@@ -6,8 +6,8 @@ import { Track as IF } from '@entities';
 @Entity()
 export class Track extends BaseEntity implements IF {
   @PrimaryGeneratedColumn()
-  @Field(() => String)
-  id: string;
+  @Field(() => Number)
+  id: number;
   @Column()
   @Field(() => String)
   ownerId: string;

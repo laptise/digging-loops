@@ -59,7 +59,7 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
     testPlay(info);
   };
   return (
-    <Link href={`library/${track.fileMapId}`}>
+    <Link href={`/library/samples/${track.id}`}>
       <TableRow
         key={track.id}
         sx={{
@@ -87,9 +87,9 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
   );
 };
 
-const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) => {
+const Library: NextPage<{ auth: User | null; view: User; category: string }> = ({ auth, view, category }) => {
   return (
-    <UploadedItemsLayout auth={auth} value={0}>
+    <UploadedItemsLayout auth={auth} category={category} pageTitle={"라이브러리"}>
       <Paper style={{ padding: 20 }}>
         <Stack direction={"row"} alignItems="center" justifyContent={"space-between"} sx={{ width: "100%", height: 40, boxSizing: "border-box" }}>
           <RadiusInput placeholder="제목으로 트랙을 검색합니다." style={{ minWidth: 160 }} />
@@ -126,7 +126,9 @@ const Library: NextPage<{ auth: User | null; view: User }> = ({ auth, view }) =>
 
 export default Library;
 export const getServerSideProps: GetServerSideProps = (ctx) =>
-  requireAuth(ctx, async () => {
+  requireAuth(ctx, async ({ params }) => {
+    const category = params?.["category"]!;
+
     const query = gql`
       query {
         getProfile {
@@ -152,5 +154,5 @@ export const getServerSideProps: GetServerSideProps = (ctx) =>
     const view = await getApolloClient(ctx)
       .query({ query })
       .then((x) => x.data?.getProfile || null);
-    return { props: { view } };
+    return { props: { view, category } };
   });

@@ -1,5 +1,5 @@
 export type Track = {
-  id: string;
+  id: number;
   ownerId: string;
   title: string;
   fileMapId: number;

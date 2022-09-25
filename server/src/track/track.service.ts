@@ -32,4 +32,7 @@ export class TrackService {
   public async getUserUploadedTracks(ownerId: string) {
     return await this.repo.find({ where: { ownerId: ownerId } });
   }
+  public async getById(id: number) {
+    return await this.repo.findOneBy({ id });
+  }
 }

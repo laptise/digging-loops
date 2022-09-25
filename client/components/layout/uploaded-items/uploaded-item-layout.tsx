@@ -15,10 +15,23 @@ function a11yProps(index: number, value: number) {
     style: { color: index === value ? "#5d408f" : undefined, fontWeight: "bold" },
   };
 }
-type UploadedItemsLayoutProps = { value: number; children: ReactNode; auth: User | null };
-export const UploadedItemsLayout: FC<UploadedItemsLayoutProps> = ({ value, children, auth }) => {
+type UploadedItemsLayoutProps = { category: string; children: ReactNode; auth: User | null; pageTitle: string };
+
+export const UploadedItemsLayout: FC<UploadedItemsLayoutProps> = ({ category, children, auth, pageTitle }) => {
+  const value = (() => {
+    switch (category) {
+      case "samples":
+        return 0;
+      case "packs":
+        return 1;
+      case "midis":
+        return 2;
+      default:
+        return 9;
+    }
+  })();
   return (
-    <Layout pageTitle="홈" mainId={styles.main} auth={auth}>
+    <Layout pageTitle={pageTitle} mainId={styles.main} auth={auth}>
       <Paper id={commonStyles.paper} style={{ minWidth: "90%" }}>
         <Typography variant="h4" sx={{ p: 2 }}>
           Uploaded Items

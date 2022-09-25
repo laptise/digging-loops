@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { FileCategory } from 'src/constants';
 import { FileMap } from 'src/file-map/file-map';
 import { FileMapService } from 'src/file-map/file-map.service';
@@ -32,5 +32,10 @@ export class TrackResolver {
       track.thumbnailFileMapId,
       FileCategory.Thumbnail,
     );
+  }
+
+  @Query(() => Track)
+  async getTrackById(@Args('id') id: number) {
+    return await this.trackService.getById(id);
   }
 }
