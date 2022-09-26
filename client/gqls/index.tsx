@@ -92,6 +92,29 @@ const queries = {
       }
     }
   `,
+  getTopSounds: gql`
+    query {
+      getTopSounds {
+        id
+        title
+        keyChord
+        fileMapId
+        duration
+        bars
+        bpm
+        tags {
+          name
+          id
+        }
+        file {
+          name
+        }
+        thumbnail {
+          url
+        }
+      }
+    }
+  `,
 } as const;
 
 function makeHook<R extends any, V extends {}, K extends keyof typeof queries>(nodeKey: K) {
@@ -127,5 +150,9 @@ export class QueryPublisher {
 
   public async searchTracks(condition: SearchTrackPayload) {
     return await this.query<Track[]>("searchTracks", { condition });
+  }
+
+  public async getTopSounds() {
+    return await this.query<Track[]>("getTopSounds");
   }
 }

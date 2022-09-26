@@ -9,9 +9,8 @@ type TopLayoutProps = { value: number; children: ReactNode; auth: User | null };
 export const TopLayout: FC<TopLayoutProps> = ({ value, children, auth }) => {
   return (
     <Layout pageTitle="홈" mainId={styles.main} auth={auth}>
-      <Paper id={styles.paper} style={{ minWidth: "90%" }}>
-        <TopTabs value={value} />
-        <Box sx={{ p: 2 }}>{children}</Box>
+      <Paper id={styles.paper} style={{ maxWidth: "calc(100% - 80px)" }}>
+        <Box>{children}</Box>
       </Paper>
     </Layout>
   );

@@ -59,4 +59,9 @@ export class TrackResolver {
   async getTrackById(@Args('id') id: number) {
     return await this.trackService.getById(id);
   }
+
+  @Query(() => [Track])
+  async getTopSounds() {
+    return await this.trackService.getTopSounds();
+  }
 }

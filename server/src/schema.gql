@@ -51,6 +51,7 @@ type Query {
   sayHello: String!
   searchTracks(condition: TrackSearchInput!): [Track!]!
   getTrackById(id: Float!): Track!
+  getTopSounds: [Track!]!
   searchTag(name: String!): [Tag!]!
   getUser(id: String!): User!
   getProfile: User!

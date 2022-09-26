@@ -85,4 +85,8 @@ export class TrackService {
       });
     }
   }
+
+  public async getTopSounds() {
+    return await this.repo.find({ take: 9 });
+  }
 }
