@@ -6,6 +6,6 @@ import { FileMapService } from './file-map.service';
 @Module({
   imports: [TypeOrmModule.forFeature([FileMap])],
   providers: [FileMapService],
-  exports: [FileMapService],
+  exports: [FileMapService, TypeOrmModule],
 })
 export class FileMapModule {}

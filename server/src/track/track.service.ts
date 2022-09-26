@@ -1,6 +1,8 @@
+import { TrackUpdatePayload } from '@dtos';
 import { User, FileMap } from '@entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TrackTagMap } from 'src/track-tag-map/track-tag-map';
 import { Repository } from 'typeorm';
 import { NewTrackInput } from './dto/index.input';
 import { Track } from './track';
@@ -10,6 +12,8 @@ export class TrackService {
   constructor(
     @InjectRepository(Track)
     private repo: Repository<Track>,
+    @InjectRepository(TrackTagMap)
+    private trackTagRepo: Repository<TrackTagMap>,
   ) {}
 
   public async addNew(
@@ -59,5 +63,26 @@ export class TrackService {
     const params = [ownerId, type];
     const res = (await this.repo.manager.query(sql, params)) as Track[];
     return res;
+  }
+
+  public async update(body: TrackUpdatePayload) {
+    const { tags, ...entity } = body;
+    const sql = `
+      DELETE FROM
+          track_tag_map
+      WHERE
+          track_tag_map.trackId = ?
+      `;
+    if (tags?.length > 0) {
+      const tagEntities = tags.map((tag) =>
+        this.trackTagRepo.create({ tagId: tag.id, trackId: entity.id }),
+      );
+      await this.repo.manager.transaction(async () => {
+        await this.repo.manager.query(sql, [entity.id]);
+        await Promise.all(
+          tagEntities.map((tag) => this.trackTagRepo.save(tag)),
+        );
+      });
+    }
   }
 }

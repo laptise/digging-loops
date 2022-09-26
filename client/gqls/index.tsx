@@ -16,6 +16,10 @@ const queries = {
         duration
         bars
         bpm
+        tags {
+          name
+          id
+        }
         file {
           name
         }
@@ -36,6 +40,10 @@ const queries = {
           fileMapId
           duration
           bars
+          tags {
+            name
+            id
+          }
           bpm
           file {
             url
@@ -61,6 +69,10 @@ const queries = {
         purchasedCount
         keyChord
         bpm
+        tags {
+          name
+          id
+        }
         file {
           createdAt
           url

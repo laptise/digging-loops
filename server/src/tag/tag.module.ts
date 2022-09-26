@@ -6,6 +6,7 @@ import { TagService } from './tag.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Tag])],
-  providers: [TagResolver, TagService],
+  providers: [TagResolver, TagService, TypeOrmModule],
+  exports: [TypeOrmModule, TagService],
 })
 export class TagModule {}

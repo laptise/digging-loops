@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository, Raw } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 import { Tag } from './tag';
 
 @Injectable()
@@ -18,5 +18,9 @@ export class TagService {
         }),
       },
     });
+  }
+
+  async getById(id: number) {
+    return await this.repo.findOneBy({ id });
   }
 }

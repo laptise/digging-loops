@@ -39,6 +39,7 @@ type Track {
   bpm: Float
   file: FileMap!
   thumbnail: FileMap!
+  tags: [Tag!]!
 }
 
 type Tag {
@@ -50,9 +51,9 @@ type Query {
   sayHello: String!
   searchTracks(condition: TrackSearchInput!): [Track!]!
   getTrackById(id: Float!): Track!
+  searchTag(name: String!): [Tag!]!
   getUser(id: String!): User!
   getProfile: User!
-  searchTag(name: String!): [Tag!]!
 }
 
 input TrackSearchInput {

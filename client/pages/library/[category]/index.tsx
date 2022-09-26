@@ -81,7 +81,7 @@ const UploadedItem: FC<{ track: Track }> = ({ track }) => {
             {track.file?.name}
           </MLink>
         </TableCell>
-        <TableCell></TableCell>
+        <TableCell>{track.tags?.map?.((t) => t.name)?.join?.(", ") || ""}</TableCell>
         <TableCell>{track.duration}</TableCell>
         <TableCell>{track.bars}</TableCell>
         <TableCell>{track.bpm}</TableCell>

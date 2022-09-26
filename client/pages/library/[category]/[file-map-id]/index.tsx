@@ -4,15 +4,16 @@ import { UploadedItemsLayout } from "@components/layout/uploaded-items/uploaded-
 import { Track, User } from "@entities";
 import { faPen } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useForceUpdate } from "@hooks/use-force-update";
+import { useTagEditorModal } from "@hooks/edit-modals/use-tag-editor-modal";
 import { useTextEditorModal } from "@hooks/edit-modals/use-text-editor-modal";
-import { Box, Chip, IconButton, Paper, Stack, Table, TableCell, TableRow, Typography } from "@mui/material";
-import { QueryPublisher, useGetTrackById } from "gqls";
+import { useForceUpdate } from "@hooks/use-force-update";
+import { Box, Button, Chip, IconButton, Paper, Stack, Table, TableCell, TableRow, Typography } from "@mui/material";
+import { clientAxios } from "@networks/axios";
+import { QueryPublisher } from "gqls";
 import { mixinComponent } from "lib/mixin-component";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { FC } from "react";
-import { useTagEditorModal } from "@hooks/edit-modals/use-tag-editor-modal";
 
 type MyTrackInfoType = {
   auth: User;
@@ -24,6 +25,7 @@ const Cell = mixinComponent(TableCell, { style: { border: "none" } });
 const Header = mixinComponent(Cell, { component: "th", variant: "head", style: { color: "#777" } });
 
 const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
+  console.log(track);
   const forceUpdate = useForceUpdate();
   const [TrackNameEditModal, trackNameEditOpen, isTrackNameUpdated] = useTextEditorModal({
     question: "트랙명 입력",
@@ -40,6 +42,11 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
       forceUpdate();
     },
   });
+
+  const submit = () => {
+    clientAxios.post("/track/update", track);
+  };
+
   return (
     <UploadedItemsLayout auth={auth} category={category} pageTitle={track?.title}>
       <Paper>
@@ -88,6 +95,11 @@ const MyTrackInfo: FC<MyTrackInfoType> = ({ auth, category, track }) => {
                   <Cell>{track.duration}</Cell>
                 </TableRow>
               </Table>
+              <Stack direction="row">
+                <Button onClick={() => submit()} variant="contained" disabled={!isTrackNameUpdated && !isTagEdited}>
+                  등록
+                </Button>
+              </Stack>
             </Stack>
             <Box style={{ width: 200, height: 200 }}></Box>
           </Stack>

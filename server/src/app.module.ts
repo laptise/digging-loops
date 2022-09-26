@@ -25,6 +25,7 @@ import { FileMap } from './file-map/file-map';
 import { EventsModule } from './events/events.module';
 import { TagModule } from './tag/tag.module';
 import { Tag } from './tag/tag';
+import { TrackTagMapModule } from './track-tag-map/track-tag-map.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { Tag } from './tag/tag';
     FileMapModule,
     EventsModule,
     TagModule,
+    TrackTagMapModule,
   ],
   controllers: [AppController],
   providers: [AppService],

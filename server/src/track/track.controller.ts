@@ -1,31 +1,27 @@
+import { TrackUpdatePayload } from '@dtos';
 import { User } from '@entities';
 import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
+  Req,
+  Res,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
-  Request,
-  Res,
-  Req,
-  StreamableFile,
-  Param,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { createReadStream, WriteStream } from 'fs';
-import { join } from 'path';
+import { GetObjectRequest } from 'aws-sdk/clients/s3';
+import type { Response } from 'express';
 import { CurrentUser } from 'src/auth/guards/local-auth.guard';
 import { FileCategory } from 'src/constants';
 import { EventsGateway } from 'src/events/events.gateway';
 import { S3Service } from 'src/s3/s3.service';
 import { NewTrackInput } from './dto/index.input';
 import { TrackService } from './track.service';
-import type { Response } from 'express';
-import { GetObjectRequest } from 'aws-sdk/clients/s3';
-import { Readable, Transform } from 'stream';
 
 @Controller('track')
 export class TrackController {
@@ -79,7 +75,6 @@ export class TrackController {
   @Get('stream/:fileType/:fileMapId/:fileName')
   async sampleStream(
     @Res() response: Response,
-    @Req() requset: Request,
     @Param('fileType') fileType: string,
     @Param('fileMapId') fileMapId: string,
     @Param('fileName') fileName: string,
@@ -89,5 +84,10 @@ export class TrackController {
     const params: GetObjectRequest = { Bucket, Key };
     const stream = this.s3Service.s3.getObject(params).createReadStream();
     stream.pipe(response);
+  }
+
+  @Post('update')
+  async updaate(@Body() body: TrackUpdatePayload) {
+    await this.trackService.update(body);
   }
 }
